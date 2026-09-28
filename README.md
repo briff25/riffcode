@@ -24,8 +24,10 @@ I wanted for my family and my work, built by describing them to
 
 ## How it's built
 
-- **Plain HTML, CSS and JavaScript.** No framework, no build step, no `npm install` —
-  open any `index.html` and it runs.
+- **Plain HTML, CSS and JavaScript** for the gallery, the apps and the family sites. No
+  framework, no build step, no `npm install` — open any `index.html` and it runs.
+- **Except brianriffle.com**, my professional site: Next.js + Tailwind CSS, exported to
+  static files. It's the one site with a build step (see its [README](sites/brianriffle.com/README.md)).
 - **Libraries only where they earn it:** D3 + TopoJSON for the map, Bootstrap on the older sites.
 - **Python for the automation:** SFTP deploys, and the book-review pipeline that calls the
   Claude API.
@@ -39,9 +41,10 @@ riffcode/              riffcode.brianriffle.com — the gallery
   projects.js          the list of projects the gallery renders
   apps/<name>/         one folder per project, each with its own index.html
 sites/                 the family sites, one folder per domain
-  brianriffle.com/
+  brianriffle.com/     Next.js source; `npm run build` writes the site to out/
   christineriffle.com/
   kateriffle.com/
+  _archive/            retired sites kept for reference; never deployed
 tools/deploy.py        uploads a site over SFTP
 ```
 
@@ -64,6 +67,9 @@ python tools/deploy.py riffcode             # upload new and changed files
 
 Sites: `riffcode`, `brianriffle`, `christine`, `kate`. READMEs, Python scripts and `.env`
 files never upload. Requires `paramiko` and `python-dotenv`.
+
+`brianriffle` uploads the built `sites/brianriffle.com/out/` folder, so run `npm run build`
+in `sites/brianriffle.com` first.
 
 ## Adding a project
 

@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+/* Redline: a precise drawing set (enterprise) marked up in red pen (edgy). */
+@theme {
+  --color-paper: #f2f4f6;
+  --color-paper-2: #e7ebef;
+  --color-ink: #101c2e;
+  --color-ink-2: #1a2a42;
+  --color-graphite: #5a6676;
+  --color-mist: #a9b4c2;
+  --color-grid: #d3dae2;
+  --color-redline: #da3329; /* strokes, fills, large text */
+  --color-redline-deep: #b8281f; /* small red text on paper */
+  --color-redline-bright: #ff6b5e; /* small red text on ink */
+  --color-teal: #1b8a86;
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  --breakpoint-xs: 30rem;
+}
+
+/* Archivo's width axis is the typographic voice: condensed for signage-style
+   headlines, normal width for reading. */
+@utility font-condensed {
+  font-variation-settings: "wdth" 62;
+}
+@utility font-narrow {
+  font-variation-settings: "wdth" 78;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-redline);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  ::selection {
+    background: var(--color-redline);
+    color: #fff;
+  }
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+}
+
+/* ---------- Drafting grid ---------- */
+.plan-grid {
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-grid) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-grid) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--color-grid) 30%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-grid) 30%, transparent) 1px, transparent 1px);
+  background-size:
+    96px 96px,
+    96px 96px,
+    16px 16px,
+    16px 16px;
+  background-position: -1px -1px;
+}
+.plan-grid-dark {
+  background-color: var(--color-ink);
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: -1px -1px;
+}
+
+/* ---------- The hero drawing: the page's one orchestrated moment ---------- */
+.draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw var(--dur, 0.9s) cubic-bezier(0.65, 0, 0.35, 1) var(--delay, 0s) forwards;
+}
+.markup {
+  opacity: 0;
+  animation: markup 0.45s ease-out var(--delay, 0s) forwards;
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes markup {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Journey panel swap: answers the visitor's click, nothing more. */
+.panel-in {
+  animation: panel-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(255 255 255 / 0.07) 0 2px,
+    transparent 2px 9px
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .markup {
+    animation: none;
+    opacity: 1;
+  }
+  .panel-in {
+    animation: none;
+  }
+}
