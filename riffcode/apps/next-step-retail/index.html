@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Step Retail</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0A2140 0%, #255459 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #80A7BF;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #0A2140 0%, #255459 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-menu li {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #80A7BF 0%, #809BA6 100%);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #0A2140;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #255459 0%, #4C591E 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 24px;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #0A2140;
+        }
+
+        .service-card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .deliverables {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .deliverables h4 {
+            color: #0A2140;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .deliverables ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .deliverables li {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .deliverables li:before {
+            content: "✓";
+            color: #255459;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Process Section */
+        .process {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #80A7BF 0%, #255459 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .step h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #0A2140;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #0A2140 0%, #255459 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0A2140;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">Next Step Retail</div>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="http://brianriffle.com/about_page.html">About</a></li>
+                <li><a href="http://brianriffle.com/contact_form_website.html">Contact</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        </nav>
+        <div class="mobile-menu" id="mobileMenu">
+            <ul>
+                <li><a href="#services" onclick="closeMobileMenu()">Services</a></li>
+                <li><a href="#process" onclick="closeMobileMenu()">Process</a></li>
+                <li><a href="http://brianriffle.com/about_page.html" onclick="closeMobileMenu()">About</a></li>
+                <li><a href="http://brianriffle.com/contact_form_website.html" onclick="closeMobileMenu()">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Turn-Key Store Launch Solutions</h1>
+            <p>Guiding retailers through the entire lifecycle of a new store launch from blank floor plan to grand opening operational readiness, brand consistency, and a visually compelling, shopper-friendly environment.</p>
+            <a href="http://brianriffle.com/contact_form_website.html" class="cta-button">Start Your Project</a>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">Our Service Portfolio</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">📐</div>
+                    <h3>Floor Plan Creation</h3>
+                    <p>Ensures each new store "feels like the brand" and supports sales per square foot goals. Design or review traffic flow, product adjacencies, decompression zones, and line-of-sight pathways using strategic zoning logic.</p>
+                    <div class="deliverables">
+                        <h4>Deliverables:</h4>
+                        <ul>
+                            <li>AutoCAD floor plans</li>
+                            <li>Space plans integrating back-of-house needs</li>
+                            <li>Traffic flow optimization</li>
+                            <li>Strategic product placement zones</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🛠️</div>
+                    <h3>Fixture Selection</h3>
+                    <p>Recommend fixture packages based on product mix, aesthetics, and inventory capacity. Oversee delivery timelines and installation coordination for seamless implementation.</p>
+                    <div class="deliverables">
+                        <h4>Deliverables:</h4>
+                        <ul>
+                            <li>Comprehensive fixture spec sheets</li>
+                            <li>Detailed sourcing lists</li>
+                            <li>Installation timeline coordination</li>
+                            <li>Quality assurance oversight</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🎨</div>
+                    <h3>Visual Merchandising Setup</h3>
+                    <p>Develop visual merchandising guidelines and training materials for staff. Create or execute floor sets and displays that drive sales and enhance customer experience.</p>
+                    <div class="deliverables">
+                        <h4>Deliverables:</h4>
+                        <ul>
+                            <li>Custom planograms and photo references</li>
+                            <li>Opening-week VM checklists</li>
+                            <li>Staff training decks and materials</li>
+                            <li>On-site coaching and support</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">⚙️</div>
+                    <h3>Cross-Functional Coordination</h3>
+                    <p>Expert project management acting as liaison between operations, visual, marketing, IT, and construction teams. Keep new store openings on schedule, budget, and brand.</p>
+                    <div class="deliverables">
+                        <h4>Deliverables:</h4>
+                        <ul>
+                            <li>Detailed project timelines</li>
+                            <li>Comprehensive punch lists</li>
+                            <li>Regular status updates</li>
+                            <li>Cross-team communication management</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="process" id="process">
+        <div class="container">
+            <h2 class="section-title">Our Proven Process</h2>
+            <div class="process-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Discovery & Planning</h4>
+                    <p>Understand your brand, goals, and requirements to create a customized launch strategy.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Design & Development</h4>
+                    <p>Create floor plans, select fixtures, and develop visual merchandising standards.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>Coordination & Setup</h4>
+                    <p>Manage all moving parts, coordinate teams, and oversee installation processes.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h4>Launch & Support</h4>
+                    <p>Ensure smooth grand opening and provide ongoing support for operational readiness.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Launch Your Next Store?</h2>
+            <p>Let's discuss how we can bring your vision to life with our comprehensive store launch services.</p>
+            <a href="http://brianriffle.com/contact_form_website.html" class="cta-button">Get Started Today</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Next Step Retail. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.remove('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (!mobileMenu.contains(event.target) && !toggle.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

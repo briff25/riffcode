@@ -1,0 +1,7 @@
+# Vibe-coding projects moved to riffcode.brianriffle.com.
+# Deploy riffcode BEFORE this file goes live, or these links will point at nothing.
+Redirect 301 /LicensePlate.html            http://riffcode.brianriffle.com/apps/license-plate/
+Redirect 301 "/Fun with Math.html"         http://riffcode.brianriffle.com/apps/fun-with-math/
+Redirect 301 /NextStepRetail.html          http://riffcode.brianriffle.com/apps/next-step-retail/
+Redirect 301 /RetailLayoutStudio           http://riffcode.brianriffle.com/apps/retail-layout-studio
+Redirect 301 /RetailLayoutCreator2         http://riffcode.brianriffle.com/apps/retail-layout-creator-2

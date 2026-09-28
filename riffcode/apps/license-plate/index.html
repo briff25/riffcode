@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>License Plate Game 🚗</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#ede9fe;font-family:'Nunito',sans-serif}
+.app{display:flex;height:100vh;overflow:hidden}
+
+.sidebar{width:230px;flex-shrink:0;background:#4c1d95;display:flex;flex-direction:column;padding:12px 10px;gap:8px;overflow:hidden;z-index:10;min-height:0}
+.game-title{font-family:'Fredoka One',cursive;font-size:20px;color:#c4b5fd;text-align:center;line-height:1.15;text-shadow:2px 2px 0 rgba(0,0,0,0.25);flex-shrink:0}
+.counter-card{background:#c4b5fd;border-radius:12px;padding:8px 10px 6px;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,0.22);flex-shrink:0}
+.counter-number{font-family:'Fredoka One',cursive;font-size:44px;color:#4c1d95;line-height:1}
+.counter-label{font-size:10px;font-weight:800;color:#4c1d95;text-transform:uppercase;letter-spacing:1px;opacity:0.7}
+.progress-track{background:rgba(255,255,255,0.15);border-radius:20px;height:7px;overflow:hidden;flex-shrink:0}
+.progress-fill{height:100%;background:#c4b5fd;border-radius:20px;transition:width 0.4s cubic-bezier(.34,1.56,.64,1);width:0%}
+.progress-text{font-size:10px;color:rgba(255,255,255,0.4);text-align:right;flex-shrink:0}
+.states-header{font-size:10px;font-weight:800;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:1.5px;flex-shrink:0}
+.list-wrap{flex:1;display:flex;min-height:0;position:relative;gap:4px}
+.state-list{flex:1;overflow-y:scroll;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:2px;min-height:0;scrollbar-width:none}
+.state-list::-webkit-scrollbar{display:none}
+.custom-track{width:12px;flex-shrink:0;background:rgba(255,255,255,0.12);border-radius:12px;position:relative;cursor:pointer}
+.custom-thumb{width:12px;background:rgba(255,255,255,0.5);border-radius:12px;position:absolute;top:0;left:0;cursor:grab;min-height:28px;transition:background 0.15s}
+.custom-thumb:active{background:rgba(255,255,255,0.75);cursor:grabbing}
+.sl-item{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,0.07);border:1.5px solid transparent;transition:background 0.15s,border-color 0.15s;-webkit-tap-highlight-color:transparent;user-select:none;min-height:36px}
+.sl-item:active{transform:scale(0.97)}
+.sl-item.found{background:rgba(196,181,253,0.2);border-color:rgba(196,181,253,0.5)}
+.sl-check{width:16px;height:16px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:10px;color:transparent}
+.sl-item.found .sl-check{background:#a78bfa;border-color:#7c3aed;color:#2e1065}
+.sl-name{font-size:11px;font-weight:600;color:rgba(255,255,255,0.55);flex:1;transition:color 0.2s}
+.sl-item.found .sl-name{color:#fff;font-weight:700}
+.sl-abbr{font-size:9px;font-weight:800;color:rgba(180,160,230,0.7);background:rgba(255,255,255,0.08);border-radius:4px;padding:1px 4px;flex-shrink:0;transition:all 0.2s}
+.sl-item.found .sl-abbr{background:#c4b5fd;color:#4c1d95}
+.reset-btn{background:rgba(255,255,255,0.7);border:none;border-radius:20px;color:#4c1d95;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;padding:6px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.reset-btn:active{background:rgba(255,255,255,0.9);transform:scale(0.97)}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(170deg,#ede9fe 0%,#f5f3ff 100%)}
+.map-header{padding:10px 16px 4px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.map-tagline{font-family:'Fredoka One',cursive;font-size:17px;color:#4c1d95}
+.map-hint{font-size:11px;color:#4c1d95;background:rgba(255,255,255,0.65);border-radius:20px;padding:4px 11px;font-weight:700}
+.map-container{flex:1;display:flex;align-items:center;justify-content:center;padding:0 8px 8px;overflow:hidden}
+#map-svg{width:100%;height:100%;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.13))}
+
+.state{fill:#ddd6fe;stroke:white;stroke-width:0.8;cursor:pointer;transition:fill 0.18s ease;-webkit-tap-highlight-color:transparent}
+.state.found{fill:#a78bfa;stroke:#7c3aed;stroke-width:1}
+.state-border{fill:none;stroke:white;stroke-width:0.6;pointer-events:none}
+.state-label{font-size:6.5px;font-weight:800;fill:#4c1d95;pointer-events:none;user-select:none;text-anchor:middle;dominant-baseline:middle;font-family:'Nunito',sans-serif}
+.state-label.found{fill:#2e1065}
+.inset-tag{font-size:7px;font-weight:800;fill:#4c1d95;pointer-events:none;font-family:'Nunito',sans-serif}
+
+.road-strip{height:22px;background:#475569;flex-shrink:0;position:relative;overflow:hidden}
+.road-strip::after{content:'';position:absolute;top:50%;left:0;right:0;height:2px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,#c4b5fd 0,#c4b5fd 24px,transparent 24px,transparent 48px);animation:road 0.8s linear infinite}
+@keyframes road{to{background-position:-48px 0}}
+
+.win-banner{display:none;position:fixed;inset:0;background:rgba(76,29,149,0.93);z-index:900;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.win-banner.show{display:flex;animation:fadeIn 0.35s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.win-emoji{font-size:62px;animation:bounce 0.5s ease-in-out infinite alternate}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+.win-title{font-family:'Fredoka One',cursive;font-size:42px;color:#c4b5fd;text-align:center;text-shadow:3px 3px 0 rgba(0,0,0,0.3)}
+.win-sub{font-size:17px;color:white;font-weight:600;text-align:center}
+.win-btn{background:#c4b5fd;border:none;border-radius:14px;padding:13px 30px;font-family:'Fredoka One',cursive;font-size:21px;color:#4c1d95;cursor:pointer;margin-top:6px;box-shadow:0 4px 0 rgba(0,0,0,0.25)}
+.win-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,0.25)}
+
+.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:800;align-items:center;justify-content:center}
+.confirm-overlay.show{display:flex}
+.confirm-box{background:white;border-radius:20px;padding:26px 26px 18px;max-width:310px;width:88%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.28)}
+.confirm-icon{font-size:34px;margin-bottom:6px}
+.confirm-title{font-family:'Fredoka One',cursive;font-size:22px;color:#4c1d95;margin-bottom:6px}
+.confirm-msg{font-size:14px;color:#475569;margin-bottom:18px;line-height:1.5}
+.confirm-btns{display:flex;gap:10px}
+.confirm-cancel{flex:1;background:#f1f5f9;border:none;border-radius:11px;padding:11px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#475569;cursor:pointer}
+.confirm-go{flex:1;background:#ef4444;border:none;border-radius:11px;padding:11px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:white;cursor:pointer}
+
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:1000;overflow:hidden}
+.cp{position:absolute;top:-16px;border-radius:2px;animation:cf linear forwards}
+@keyframes cf{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+@media(orientation:portrait){
+  .app{flex-direction:column}
+  .sidebar{width:100%;height:auto;flex-direction:column;max-height:42vh;padding:8px 10px;gap:6px}
+  .game-title{font-size:16px}
+  .counter-number{font-size:32px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="game-title">🚗 License Plate Game</div>
+    <div class="counter-card">
+      <div class="counter-number" id="counter">0</div>
+      <div class="counter-label">of 50 States Found</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-text" id="progress-text">Tap a state on the map or list!</div>
+    <div class="states-header">All 50 States</div>
+    <div class="list-wrap">
+      <div class="state-list" id="state-list"></div>
+      <div class="custom-track" id="scroll-track">
+        <div class="custom-thumb" id="scroll-thumb"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="map-header">
+      <div class="map-tagline">🗺️ Spot it &amp; tap it!</div>
+      <div style="display:flex;align-items:center;gap:8px"><div class="map-hint">Tap map or list to mark</div><button class="reset-btn" onclick="confirmReset()">🔄 New Trip</button></div>
+    </div>
+    <div class="map-container">
+      <svg id="map-svg" viewBox="0 0 960 600"></svg>
+    </div>
+    <div class="road-strip"></div>
+  </div>
+</div>
+
+<div class="win-banner" id="win-banner">
+  <div class="win-emoji">🎉</div>
+  <div class="win-title">All 50 Found!</div>
+  <div class="win-sub">You're a license plate champion! 🏆</div>
+  <button class="win-btn" onclick="closeWin()">🚗 Keep Driving!</button>
+</div>
+
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">🚗</div>
+    <div class="confirm-title">New Trip?</div>
+    <div class="confirm-msg">Clear all found states and start fresh?</div>
+    <div class="confirm-btns">
+      <button class="confirm-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="confirm-go" onclick="doReset()">Start Fresh!</button>
+    </div>
+  </div>
+</div>
+<div class="confetti-wrap" id="confetti-wrap"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+const FIPS_ABBR = {
+  "01":"AL","02":"AK","04":"AZ","05":"AR","06":"CA","08":"CO","09":"CT",
+  "10":"DE","12":"FL","13":"GA","15":"HI","16":"ID","17":"IL","18":"IN",
+  "19":"IA","20":"KS","21":"KY","22":"LA","23":"ME","24":"MD","25":"MA",
+  "26":"MI","27":"MN","28":"MS","29":"MO","30":"MT","31":"NE","32":"NV",
+  "33":"NH","34":"NJ","35":"NM","36":"NY","37":"NC","38":"ND","39":"OH",
+  "40":"OK","41":"OR","42":"PA","44":"RI","45":"SC","46":"SD","47":"TN",
+  "48":"TX","49":"UT","50":"VT","51":"VA","53":"WA","54":"WV","55":"WI","56":"WY"
+};
+const ABBR_NAME = {
+  "AL":"Alabama","AK":"Alaska","AZ":"Arizona","AR":"Arkansas","CA":"California",
+  "CO":"Colorado","CT":"Connecticut","DE":"Delaware","FL":"Florida","GA":"Georgia",
+  "HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa",
+  "KS":"Kansas","KY":"Kentucky","LA":"Louisiana","ME":"Maine","MD":"Maryland",
+  "MA":"Massachusetts","MI":"Michigan","MN":"Minnesota","MS":"Mississippi",
+  "MO":"Missouri","MT":"Montana","NE":"Nebraska","NV":"Nevada","NH":"New Hampshire",
+  "NJ":"New Jersey","NM":"New Mexico","NY":"New York","NC":"North Carolina",
+  "ND":"North Dakota","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PA":"Pennsylvania",
+  "RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee",
+  "TX":"Texas","UT":"Utah","VT":"Vermont","VA":"Virginia","WA":"Washington",
+  "WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming"
+};
+const ALL_STATES = Object.entries(ABBR_NAME).sort((a,b)=>a[1].localeCompare(b[1])).map(([abbr,name])=>({abbr,name}));
+
+// States too small to label on the map — they're in the sidebar list instead.
+// Trying to cram CT, RI, DE, NJ, MD, MA, VT, NH into the crowded NE corner
+// just creates overlapping illegible text. Better to leave them clean and tapable.
+const SKIP_MAP_LABEL = new Set(["CT","RI","DE","NJ","MD","MA","VT","NH","FL"]);
+
+// Centroid corrections ONLY for states where D3's centroid is provably wrong:
+//   MI — centroid lands in Lake Michigan (state has two peninsulas)
+//   HI — centroid lands in the ocean between islands
+//   FL — centroid pulled north by the panhandle; nudge south into peninsula
+//   LA — centroid pulled into the delta/gulf
+// All other states: use D3 centroid directly — it's accurate.
+const CENTROID_OVERRIDE = {
+  "MI": "lower",  // special handling: use bounding box center of lower peninsula
+  "HI": [212, 540],
+  "FL": [595, 450],
+  "LA": [500, 408],
+};
+
+const ABBR_ELEM_ID = {};
+let found = new Set();
+
+function buildSidebar() {
+  document.getElementById("state-list").innerHTML = ALL_STATES.map(({abbr,name}) =>
+    `<div class="sl-item" id="li-${abbr}" data-abbr="${abbr}">
+      <div class="sl-check">✓</div>
+      <div class="sl-name">${name}</div>
+      <div class="sl-abbr">${abbr}</div>
+    </div>`
+  ).join("");
+  document.querySelectorAll(".sl-item").forEach(el => {
+    let tapping = false;
+    el.addEventListener("touchstart", e => { e.preventDefault(); tapping = true; }, {passive:false});
+    el.addEventListener("touchend", e => { e.preventDefault(); if(tapping){tapping=false;toggle(el.dataset.abbr);} });
+    el.addEventListener("click", () => { if(!tapping) toggle(el.dataset.abbr); });
+  });
+}
+
+function toggle(abbr) {
+  if (found.has(abbr)) { found.delete(abbr); }
+  else {
+    found.add(abbr);
+    const id = ABBR_ELEM_ID[abbr];
+    if (id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.transformBox = "fill-box";
+        el.style.transformOrigin = "center";
+        el.animate([{transform:"scale(1)"},{transform:"scale(1.08)"},{transform:"scale(1)"}],{duration:200,easing:"ease-out"});
+      }
+    }
+  }
+  sync(abbr); save(); updateCounter();
+  if (found.size === 50) setTimeout(showWin, 500);
+}
+
+function sync(abbr) {
+  const on = found.has(abbr);
+  const id = ABBR_ELEM_ID[abbr];
+  if (id) document.getElementById(id)?.classList.toggle("found", on);
+  document.getElementById("lbl-"+abbr)?.classList.toggle("found", on);
+  document.getElementById("li-"+abbr)?.classList.toggle("found", on);
+}
+
+function updateCounter() {
+  document.getElementById("counter").textContent = found.size;
+  document.getElementById("progress-fill").style.width = (found.size/50*100).toFixed(1)+"%";
+  document.getElementById("progress-text").textContent =
+    found.size===0  ? "Tap a state on the map or list!" :
+    found.size===50 ? "🎉 You found all 50!" :
+    `${50-found.size} state${50-found.size===1?"":"s"} still to find!`;
+}
+
+async function initMap() {
+  const topo     = await d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json");
+  const features = topojson.feature(topo, topo.objects.states).features;
+  const borders  = topojson.mesh(topo, topo.objects.states, (a,b)=>a!==b);
+  const nation   = topojson.feature(topo, topo.objects.nation);
+
+  const svg     = d3.select("#map-svg");
+  const proj    = d3.geoAlbersUsa().scale(1280).translate([480,300]);
+  const geoPath = d3.geoPath().projection(proj);
+
+  svg.append("path").datum(nation)
+    .attr("fill","rgba(237,233,254,0.6)")
+    .attr("stroke","rgba(167,139,250,0.4)").attr("stroke-width","1.5")
+    .attr("d", geoPath);
+
+  // Draw states and register IDs
+  features.forEach(feat => {
+    const fips  = String(feat.id).padStart(2,"0");
+    const abbr  = FIPS_ABBR[fips];
+    if (!abbr) return;
+    const elemId = "state-" + fips;
+    ABBR_ELEM_ID[abbr] = elemId;
+
+    let touching = false;
+    const el = svg.append("path")
+      .attr("class","state").attr("id",elemId).attr("d",geoPath(feat))
+      .node();
+    el.addEventListener("touchstart", e=>{e.preventDefault();touching=true;},{passive:false});
+    el.addEventListener("touchend",   e=>{e.preventDefault();if(touching){touching=false;toggle(abbr);}});
+    el.addEventListener("click",      ()=>{if(!touching)toggle(abbr);});
+  });
+
+  // Borders on top
+  svg.append("path").datum(borders).attr("class","state-border").attr("d",geoPath);
+
+  // Labels — computed from actual projected geometry
+  features.forEach(feat => {
+    const fips = String(feat.id).padStart(2,"0");
+    const abbr = FIPS_ABBR[fips];
+    if (!abbr) return;
+
+    // Skip tiny NE states — too crowded to label cleanly
+    if (SKIP_MAP_LABEL.has(abbr)) return;
+
+    let x, y;
+    const override = CENTROID_OVERRIDE[abbr];
+
+    if (override === "lower") {
+      // Michigan special case: find the largest polygon (lower peninsula)
+      // by using the bounding box of the projected path
+      const bounds = geoPath.bounds(feat);
+      // Lower peninsula is roughly the southern half — use center of full bounds
+      // but shift south to avoid Lake Michigan centroid
+      x = (bounds[0][0] + bounds[1][0]) / 2;
+      y = bounds[0][1] + (bounds[1][1] - bounds[0][1]) * 0.72;
+    } else if (Array.isArray(override)) {
+      [x, y] = override;
+    } else {
+      // Default: use D3 centroid — correct for the vast majority of states
+      const c = geoPath.centroid(feat);
+      if (!c || isNaN(c[0])) return;
+      [x, y] = c;
+    }
+
+    svg.append("text")
+      .attr("class","state-label").attr("id","lbl-"+abbr)
+      .attr("x",x).attr("y",y)
+      .text(abbr);
+  });
+
+  // Inset labels for AK and HI boxes
+  svg.append("text").attr("class","inset-tag").attr("x",55).attr("y",490).attr("font-size","8").text("AK");
+  svg.append("text").attr("class","inset-tag").attr("x",225).attr("y",545).attr("font-size","8").text("HI");
+
+  loadSaved();
+}
+
+function save() { localStorage.setItem("lp-v5", JSON.stringify([...found])); }
+function loadSaved() {
+  try {
+    const s = localStorage.getItem("lp-v5");
+    if (s) JSON.parse(s).forEach(abbr => { found.add(abbr); sync(abbr); });
+  } catch(e){}
+  updateCounter();
+}
+
+function confirmReset() { document.getElementById("confirm-overlay").classList.add("show"); }
+function closeConfirm()  { document.getElementById("confirm-overlay").classList.remove("show"); }
+function doReset() {
+  found.clear();
+  ALL_STATES.forEach(({abbr})=>sync(abbr));
+  save(); updateCounter(); closeConfirm();
+}
+function showWin() { document.getElementById("win-banner").classList.add("show"); launchConfetti(); }
+function closeWin() { document.getElementById("win-banner").classList.remove("show"); }
+function launchConfetti() {
+  const w = document.getElementById("confetti-wrap");
+  w.innerHTML = "";
+  const cols=["#fbbf24","#4ade80","#38bdf8","#f87171","#c084fc","#fb923c","#fff"];
+  for(let i=0;i<140;i++){
+    const p=document.createElement("div");p.className="cp";
+    p.style.cssText=`left:${Math.random()*100}vw;background:${cols[Math.random()*cols.length|0]};width:${7+Math.random()*8}px;height:${7+Math.random()*8}px;border-radius:${Math.random()>.5?"50%":"2px"};animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*1.2}s`;
+    w.appendChild(p);
+  }
+  setTimeout(()=>{w.innerHTML=""},6500);
+}
+
+
+// ── CUSTOM SCROLLBAR ──
+function initScrollbar() {
+  const list  = document.getElementById("state-list");
+  const track = document.getElementById("scroll-track");
+  const thumb = document.getElementById("scroll-thumb");
+  if (!list || !track || !thumb) return null;
+
+  function updateThumb() {
+    const trackH = track.clientHeight;
+    const ratio  = list.clientHeight / list.scrollHeight;
+    const thumbH = Math.max(28, trackH * ratio);
+    const maxScroll = list.scrollHeight - list.clientHeight;
+    const scrollPct = maxScroll > 0 ? list.scrollTop / maxScroll : 0;
+    const maxTop    = trackH - thumbH;
+    thumb.style.height = thumbH + "px";
+    thumb.style.top    = (scrollPct * maxTop) + "px";
+    track.style.opacity = ratio >= 1 ? "0" : "1";
+  }
+
+  list.addEventListener("scroll", updateThumb);
+  window.addEventListener("resize", updateThumb);
+  setTimeout(updateThumb, 100);
+
+  let dragging = false, startY = 0, startScrollTop = 0;
+
+  function startDrag(e) {
+    dragging = true;
+    startY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
+    startScrollTop = list.scrollTop;
+    e.preventDefault();
+  }
+  function onDrag(e) {
+    if (!dragging) return;
+    const cy = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
+    const dy = cy - startY;
+    const scrollRange = list.scrollHeight - list.clientHeight;
+    const thumbRange  = track.clientHeight - thumb.clientHeight;
+    if (thumbRange > 0) list.scrollTop = startScrollTop + dy * (scrollRange / thumbRange);
+    e.preventDefault();
+  }
+  function endDrag() { dragging = false; }
+
+  thumb.addEventListener("mousedown",  startDrag);
+  thumb.addEventListener("touchstart", startDrag, {passive:false});
+  document.addEventListener("mousemove", onDrag);
+  document.addEventListener("touchmove", onDrag, {passive:false});
+  document.addEventListener("mouseup",  endDrag);
+  document.addEventListener("touchend", endDrag);
+
+  track.addEventListener("click", e => {
+    if (e.target === thumb) return;
+    const rect  = track.getBoundingClientRect();
+    const pct   = (e.clientY - rect.top) / track.clientHeight;
+    list.scrollTop = pct * (list.scrollHeight - list.clientHeight);
+  });
+
+  return updateThumb;
+}
+
+buildSidebar();
+const _sb = initScrollbar();
+if(_sb) setTimeout(_sb, 80);
+initMap().then(()=>{ if(_sb) _sb(); });
+</script>
+</body>
+</html>

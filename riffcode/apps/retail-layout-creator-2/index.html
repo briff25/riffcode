@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A practical retail space-planning canvas for testing fixture layouts, dimensions, and capacity."
+    />
+    <title>Retail Layout Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div>
+          <h1>Retail Layout Studio</h1>
+          <p id="roomSummary">Retail space plan · 60′ × 40′</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="save-state" id="saveState"><i></i> Saved locally</span>
+        <button class="button secondary" id="floorSettingsBtn">Floor size</button>
+        <button class="button primary" id="savePlanBtn">Save</button>
+        <button class="button secondary" id="saveAsBtn">Save as</button>
+        <button class="button secondary" id="plansBtn">Plans</button>
+        <button class="button secondary" id="exportBtn">Import / Export</button>
+        <button class="button secondary" id="clearBtn">Clear floor</button>
+      </div>
+    </header>
+
+    <nav class="toolbar" aria-label="Canvas tools">
+      <div class="tool-group">
+        <button class="icon-button" id="undoBtn" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
+          <svg viewBox="0 0 24 24"><path d="M9 7 4 12l5 5M5 12h8a6 6 0 1 1 0 12"/></svg>
+        </button>
+        <button class="icon-button" id="redoBtn" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
+          <svg viewBox="0 0 24 24"><path d="m15 7 5 5-5 5m4-5h-8a6 6 0 1 0 0 12"/></svg>
+        </button>
+      </div>
+      <div class="tool-group snap-controls">
+        <label class="switch-label">
+          <input type="checkbox" id="snapToggle" checked />
+          <span class="switch" aria-hidden="true"></span>
+          Snap
+        </label>
+        <select id="snapSize" aria-label="Snap interval">
+          <option value="1">1 ft</option>
+          <option value="0.5">6 in</option>
+          <option value="0.25">3 in</option>
+        </select>
+      </div>
+      <div class="tool-group selection-tools">
+        <button class="toolbar-button" id="rotateBtn" disabled>
+          <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+          Rotate 90°
+        </button>
+        <button class="toolbar-button" id="duplicateBtn" disabled>
+          <svg viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+          Duplicate
+        </button>
+        <button class="toolbar-button danger-text" id="deleteBtn" disabled>
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6"/></svg>
+          Delete
+        </button>
+      </div>
+      <div class="tool-group zoom-controls">
+        <button class="icon-button" id="zoomOutBtn" aria-label="Zoom out">−</button>
+        <span id="zoomLabel">100%</span>
+        <button class="icon-button" id="zoomInBtn" aria-label="Zoom in">+</button>
+      </div>
+    </nav>
+
+    <main class="workspace">
+      <aside class="panel library-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Fixture library</p>
+            <h2>Add to floor</h2>
+          </div>
+          <span class="item-count">8 types</span>
+        </div>
+        <p class="panel-note">Drag a fixture to the plan or use Add.</p>
+        <div class="fixture-library" id="fixtureLibrary"></div>
+      </aside>
+
+      <section class="canvas-column" aria-label="Store planning canvas">
+        <div class="canvas-statusbar">
+          <div class="canvas-title">
+            <span class="status-dot"></span>
+            <strong id="planTitle">Concept plan A</strong>
+            <span id="workingArea">Working area: 2,400 sq ft</span>
+          </div>
+          <div class="canvas-hint" id="canvasHint">Select a fixture to edit its dimensions</div>
+        </div>
+        <div class="canvas-scroll" id="canvasScroll">
+          <div class="canvas-zoom" id="canvasZoom">
+            <svg
+              id="storeSvg"
+              viewBox="0 0 1200 800"
+              role="application"
+              aria-label="60 by 40 foot retail floor plan"
+            >
+              <defs>
+                <pattern id="minorGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#e9edf1" stroke-width="1" />
+                </pattern>
+                <pattern id="majorGrid" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <rect width="100" height="100" fill="url(#minorGrid)" />
+                  <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#cfd7df" stroke-width="1.4" />
+                </pattern>
+                <filter id="fixtureShadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#153349" flood-opacity=".14" />
+                </filter>
+              </defs>
+              <rect class="floor" id="floorRect" x="1" y="1" width="1198" height="798" rx="2" />
+              <rect class="grid-fill" id="gridRect" x="1" y="1" width="1198" height="798" rx="2" />
+              <g class="architecture" aria-hidden="true">
+                <path class="wall-line" id="wallOutline" d="M2 2h1196v796H2z" />
+                <g class="entrance">
+                  <rect id="entranceMask" x="525" y="786" width="150" height="13" fill="#fff" />
+                  <path id="entranceDoors" d="M525 798v-68a68 68 0 0 1 68 68M675 798v-68a68 68 0 0 0-68 68" />
+                  <text id="entranceLabel" x="600" y="765">MAIN ENTRY</text>
+                </g>
+              </g>
+              <g id="fixtureLayer"></g>
+              <g class="scale-legend" id="scaleLegend" aria-hidden="true">
+                <rect x="18" y="744" width="164" height="38" rx="8" />
+                <path d="M34 762v8m0-4h100m0-4v8" />
+                <text x="144" y="769">5 ft</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+        <footer class="canvas-footer">
+          <span><kbd>Drag</kbd> move</span>
+          <span><kbd>Shift</kbd> multi-select</span>
+          <span><kbd>Corner</kbd> resize</span>
+          <span><kbd>R</kbd> rotate</span>
+          <span><kbd>⌫</kbd> delete</span>
+          <span class="measure-note">Grid: 6 in minor · 5 ft major</span>
+        </footer>
+      </section>
+
+      <aside class="panel details-panel">
+        <section class="inspector-section">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">Selection</p>
+              <h2>Fixture details</h2>
+            </div>
+          </div>
+          <div class="empty-selection" id="emptySelection">
+            <div class="selection-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="m7 3 10 9-5 1 3 6-3 2-3-6-4 3z"/></svg>
+            </div>
+            <p id="selectionMessage">Select a fixture on the floor to edit its label, size, position, and rotation. Hold Shift to select multiple fixtures.</p>
+          </div>
+          <form id="fixtureForm" class="fixture-form" hidden>
+            <label class="full-field">
+              <span>Fixture label</span>
+              <input id="labelInput" type="text" maxlength="32" />
+            </label>
+            <div class="type-readout">
+              <span id="typeSwatch"></span>
+              <div><small>TYPE</small><strong id="typeName"></strong></div>
+            </div>
+            <div class="field-grid">
+              <label><span>Width</span><div class="unit-input"><input id="widthInput" type="number" min="1" step="0.25" /><b>ft</b></div></label>
+              <label><span>Depth</span><div class="unit-input"><input id="depthInput" type="number" min="1" step="0.25" /><b>ft</b></div></label>
+              <label><span>X position</span><div class="unit-input"><input id="xInput" type="number" min="0" max="60" step="0.25" /><b>ft</b></div></label>
+              <label><span>Y position</span><div class="unit-input"><input id="yInput" type="number" min="0" max="40" step="0.25" /><b>ft</b></div></label>
+            </div>
+            <label class="full-field">
+              <span>Rotation</span>
+              <div class="rotation-field">
+                <input id="rotationRange" type="range" min="0" max="359" step="1" />
+                <div class="unit-input angle"><input id="rotationInput" type="number" min="0" max="359" step="1" /><b>°</b></div>
+              </div>
+            </label>
+            <div class="inspector-actions">
+              <button type="button" class="button secondary" id="inspectorDuplicate">Duplicate</button>
+              <button type="button" class="button danger" id="inspectorDelete">Delete</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="tally-section">
+          <div class="panel-heading compact">
+            <div>
+              <p class="eyebrow">Live takeoff</p>
+              <h2>Fixture tally</h2>
+            </div>
+            <span class="tally-total" id="tallyTotal">0</span>
+          </div>
+          <div class="metric-grid">
+            <div><span id="coverageValue">0%</span><small>Floor coverage</small></div>
+            <div><span id="bayValue">0</span><small>Merch. bays</small></div>
+          </div>
+          <div class="tally-table-wrap">
+            <table>
+              <thead><tr><th>Fixture</th><th>Qty</th><th>LF</th></tr></thead>
+              <tbody id="tallyBody"><tr class="empty-row"><td colspan="3">No fixtures placed</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <dialog class="app-dialog" id="floorDialog">
+      <form class="dialog-card" id="floorForm">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">Sales floor</p><h2>Floor settings</h2></div>
+          <button class="dialog-close" type="button" data-close-dialog="floorDialog" aria-label="Close">×</button>
+        </div>
+        <label class="dialog-field">
+          <span>Size preset</span>
+          <select id="floorPreset">
+            <option value="custom">Custom</option>
+            <option value="30x20">Compact · 30′ × 20′</option>
+            <option value="60x40">Specialty · 60′ × 40′</option>
+            <option value="120x80">Large format · 120′ × 80′</option>
+          </select>
+        </label>
+        <div class="floor-size-grid">
+          <label class="dialog-field"><span>Width</span><div class="unit-input"><input id="floorWidthInput" type="number" min="10" step="1" required /><b>ft</b></div></label>
+          <label class="dialog-field"><span>Depth</span><div class="unit-input"><input id="floorDepthInput" type="number" min="10" step="1" required /><b>ft</b></div></label>
+        </div>
+        <p class="floor-area-preview" id="floorAreaPreview"></p>
+        <fieldset class="floor-conflict" id="floorConflict" hidden>
+          <legend id="floorConflictMessage"></legend>
+          <label><input type="radio" name="floorConflictAction" value="cancel" checked /> Cancel and review the fixtures</label>
+          <label><input type="radio" name="floorConflictAction" value="move" /> Move the fixtures inside the new floor</label>
+          <label><input type="radio" name="floorConflictAction" value="flag" /> Resize the floor and flag the conflicts</label>
+        </fieldset>
+        <div class="dialog-actions">
+          <button class="button secondary" type="button" data-close-dialog="floorDialog">Cancel</button>
+          <button class="button primary" type="submit">Apply floor size</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog" id="saveAsDialog">
+      <form class="dialog-card" id="saveAsForm">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">New copy</p><h2>Save plan as</h2></div>
+          <button class="dialog-close" type="button" data-close-dialog="saveAsDialog" aria-label="Close">×</button>
+        </div>
+        <label class="dialog-field"><span>Plan name</span><input id="saveAsName" type="text" maxlength="60" required /></label>
+        <div class="dialog-actions">
+          <button class="button secondary" type="button" data-close-dialog="saveAsDialog">Cancel</button>
+          <button class="button primary" type="submit">Save copy</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog wide" id="plansDialog">
+      <section class="dialog-card">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">Saved locally</p><h2>Your plans</h2></div>
+          <button class="dialog-close" type="button" data-close-dialog="plansDialog" aria-label="Close">×</button>
+        </div>
+        <p class="dialog-note">Plans are stored in this browser. Download a project file for a portable backup.</p>
+        <div class="plans-list" id="plansList"></div>
+        <div class="dialog-actions">
+          <button class="button secondary" type="button" id="newPlanCopyBtn">Save current as new</button>
+          <button class="button primary" type="button" data-close-dialog="plansDialog">Done</button>
+        </div>
+      </section>
+    </dialog>
+
+    <dialog class="app-dialog wide" id="exportDialog">
+      <section class="dialog-card">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">Files and sharing</p><h2>Import / Export</h2></div>
+          <button class="dialog-close" type="button" data-close-dialog="exportDialog" aria-label="Close">×</button>
+        </div>
+        <div class="export-grid">
+          <button class="export-option" type="button" id="downloadProjectBtn"><strong>Download project</strong><span>Editable JSON backup</span></button>
+          <button class="export-option" type="button" id="importProjectBtn"><strong>Import project</strong><span>Open a JSON backup</span></button>
+          <button class="export-option" type="button" id="exportPngBtn"><strong>Export image</strong><span>High-resolution PNG</span></button>
+          <button class="export-option" type="button" id="exportCsvBtn"><strong>Export tally</strong><span>Fixture details as CSV</span></button>
+          <button class="export-option" type="button" id="printPlanBtn"><strong>Print / PDF</strong><span>Clean landscape plan</span></button>
+        </div>
+        <div class="dialog-actions"><button class="button primary" type="button" data-close-dialog="exportDialog">Done</button></div>
+      </section>
+    </dialog>
+
+    <input id="importProjectInput" type="file" accept=".json,application/json" hidden />
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

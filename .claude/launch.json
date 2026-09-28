@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "riffcode",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8777", "--directory", "riffcode"],
+      "port": 8777
+    },
+    {
+      "name": "brianriffle",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8781", "--directory", "sites/brianriffle.com"],
+      "port": 8781
+    },
+    {
+      "name": "christineriffle",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8782", "--directory", "sites/christineriffle.com"],
+      "port": 8782
+    },
+    {
+      "name": "kateriffle",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8783", "--directory", "sites/kateriffle.com"],
+      "port": 8783
+    }
+  ]
+}

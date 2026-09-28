@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christine's Book Reviews</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --accent-color: #45b7d1;
+            --light-bg: #f8f9fa;
+            --text-color: #333;
+        }
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+        }
+        
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-color) !important;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-title {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .book-card {
+            background: rgb(217, 234, 233);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .book-cover {
+            width: 100%;
+            height: 250px;
+            margin-top: 20px;
+            object-fit: scale-down;
+        }
+        
+        .book-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .book-author {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .rating {
+            font-size: 1.2rem;
+            color: #ffc107;
+            margin-bottom: 1rem;
+        }
+        
+        .genre-tags {
+            margin-bottom: 1rem;
+        }
+        
+        .genre-tag {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            display: inline-block;
+        }
+        
+        .review-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+        
+        .amazon-btn {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 25px;
+            padding: 0.7rem 1.5rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .amazon-btn:hover {
+            background-color: #e55555;
+            transform: translateY(-2px);
+        }
+        
+        .filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .filter-btn {
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 20px;
+            padding: 0.6rem 1.2rem;
+            margin: 0.2rem;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+        }
+        
+        .load-more-btn {
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .load-more-btn:hover {
+            background-color: #3a9bc1;
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            background-color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .footer-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .btn-cta {
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 25px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-cta:hover {
+            background-color: #3a9bc1;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">📚 Christine's Reading List</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#books">Books</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                </ul>
+            </div> -->
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="hero-title">Hi! I'm Christine and I love reading! 📖</h1>
+                    <p class="hero-subtitle">
+                        I'm 11 years old who loves books. Check out my reviews to find your next favorite story!
+                    </p>
+                    
+                </div>
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="stats-box">
+                                <div class="stats-number">100+</div>
+                                <p>Books Read</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-box">
+                                <div class="stats-number">4.6</div>
+                                <p>Avg Rating</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section 
+    <div class="container">
+        <div class="filter-section">
+            <div class="text-center">
+                <h5 class="mb-3">Find books by genre:</h5>
+                <button type="button" class="btn filter-btn active">All</button>
+                <button type="button" class="btn filter-btn">Fantasy</button>
+                <button type="button" class="btn filter-btn">Mystery</button>
+                <button type="button" class="btn filter-btn">Funny</button>
+                <button type="button" class="btn filter-btn">Adventure</button>
+            </div>
+        </div>
+    </div>-->
+
+    <!-- Books Section -->
+    <section id="books" class="container">
+        <h2 class="section-title">My Book Reviews</h2>
+        
+        <div class="row">
+            <!-- Book Card 1 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card book-card h-100">
+                    <img src="./Images/Wonder.jpg" height="30" class="card-img-top book-cover" alt="Wonder">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="book-title">Wonder</h5>
+                        <p class="book-author">by R.J. Palacio</p>
+                        <div class="rating mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="ms-2 text-muted">(5/5)</span>
+                        </div>
+                        <div class="genre-tags">
+                            <span class="genre-tag">School</span>
+                            <span class="genre-tag">Inspiring</span>
+                        </div>
+                        <p class="review-text flex-grow-1">
+                            
+        
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Card 2 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card book-card h-100">
+                    <img src="./Images/Control Freak.jpg" class="card-img-top book-cover" alt="Control Freak">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="book-title">Control Freaks</h5>
+                        <p class="book-author">by J.E. Thomas</p>
+                        <div class="rating mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="ms-2 text-muted">(4/5)</span>
+                        </div>
+                        <div class="genre-tags">
+                            <span class="genre-tag">Funny</span>
+                            <span class="genre-tag">Diary</span>
+                        </div>
+                        <p class="review-text flex-grow-1">
+                            I liked that the kids in this book think outside the box.
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Book Card 3 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card book-card h-100">
+                    <img src="./Images/Whale Done.jpg" class="card-img-top book-cover" alt="Whale Done">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="book-title">Whale Done</h5>
+                        <p class="book-author">by Stuart Gibbs</p>
+                        <div class="rating mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="ms-2 text-muted">(5/5)</span>
+                        </div>
+                        <div class="genre-tags">
+                            <span class="genre-tag">Fantasy</span>
+                            <span class="genre-tag">Magic</span>
+                        </div>
+                        <p class="review-text flex-grow-1">
+                            I love the FunJungle Series
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+        
+
+            <!-- Book Card 4 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card book-card h-100">
+                    <img src="./Images/All Ears.jpg" class="card-img-top book-cover" alt="All Ears">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="book-title">All Ears</h5>
+                        <p class="book-author">by Stuart Gibbs</p>
+                        <div class="rating mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fa-solid fa-star-half"></i>
+                            <span class="ms-2 text-muted">(3.5/5)</span>
+                        </div>
+                        <div class="genre-tags">
+                            <span class="genre-tag">Funny</span>
+                            <span class="genre-tag">Magic</span>
+                        </div>
+                        <p class="review-text flex-grow-1">
+                            I love the FunJungle Series
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+        
+
+            <!-- Book Card 5 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Margie Kelly Breaks the Dress Code.jpg" class="card-img-top book-cover" alt="Margie Kelly">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Margie Kelly Breaks the Dress Code</h5>
+                            <p class="book-author">by Bridget Farr</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-2 text-muted">(4/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Funny</span>
+                                <span class="genre-tag">Magic</span>
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                The main charachter stands up for what she believes in.  I like that.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+            
+
+            <!-- Book Card 6 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Belly Up.jpg" class="card-img-top book-cover" alt="Belly Up">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Belly Up</h5>
+                            <p class="book-author">by Stuart Gibbs</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-2 text-muted">(4/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Funny</span>
+                                <span class="genre-tag">Fiction</span>
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books is an awesome start to the FunJungle series!
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+        
+            
+            
+            <!-- Book Card 7 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Guts.jpg" class="card-img-top book-cover" alt="Guts">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Guts</h5>
+                            <p class="book-author">by Raina Telgemeier</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-2 text-muted">(5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Funny</span>
+                                <span class="genre-tag">True Story</span>
+                            </div>
+                            <p class="review-text flex-grow-1">
+                            This was a good book
+                                
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+    
+        
+
+         <!-- Book Card 8 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Sisters.jpg" class="card-img-top book-cover" alt="Sisters">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Sisters</h5>
+                            <p class="book-author">by Raina Telgemeier</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fa-solid fa-star-half"></i>
+                                <span class="ms-2 text-muted">(4.5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Graphic Novel</span>
+                                <span class="genre-tag">True Story</span>
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books is not what I expected.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+    
+
+        <!-- Book Card 9 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Smile.jpg" class="card-img-top book-cover" alt="Smile">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Smile</h5>
+                            <p class="book-author">by Raina Telgemeier</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-2 text-muted">(4/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Graphic Novel</span>
+                                <span class="genre-tag">True Story</span>
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books is not what I expected.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+        <!-- Book Card 10 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Drama.jpg" class="card-img-top book-cover" alt="Drama">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Drama</h5>
+                            <p class="book-author">by Raina Telgemeier</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fa-solid fa-star-half"></i>
+                                <span class="ms-2 text-muted">(3.5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Graphic Novel</span>
+                                <span class="genre-tag">True Story</span>
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                Hard to relate.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+    
+        
+
+
+        <!-- Book Card 11 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Mapmaker.jpg" class="card-img-top book-cover" alt="Mapmaker">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">The Last Map Maker</h5>
+                            <p class="book-author">by Christina Soontornvat</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-2 text-muted">(5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fantasy</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books kept me hooked from cover to cover.  
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+    
+    
+
+
+         <!-- Book Card 12 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Changelings.jpg" class="card-img-top book-cover" alt="Changelings">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">The Changelings</h5>
+                            <p class="book-author">by Christina Soontornvat</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-2 text-muted">(4/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fantasy</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books is not what I expected.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Book Card 13 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Dark Land.jpg" class="card-img-top book-cover" alt="Darkland">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">In a Dark Land</h5>
+                            <p class="book-author">by Christina Soontornvat</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fa-solid fa-star-half"></i>
+                                <span class="ms-2 text-muted">(4.5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fantasy</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books is not what I expected.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+             <!-- Book Card 14 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/The Guardian Test.jpg" class="card-img-top book-cover" alt="Guardian Test">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">The Guardian Test</h5>
+                            <p class="book-author">by Christina Soontornvat</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-2 text-muted">(3/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fantasy</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books is not what I expected.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+            <!-- Book Card 15 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Into the Shadow Mist.jpg" class="card-img-top book-cover" alt="Shadow Mist">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Into the Shadow Mist</h5>
+                            <p class="book-author">by Christina Soontornvat</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fa-solid fa-star-half"></i>
+                                <span class="ms-2 text-muted">(3.5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fantasy</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books is not what I expected.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+             <!-- Book Card 16 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Temple of Secrets.jpg" class="card-img-top book-cover" alt="Temple of Secrets">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Temple of Secrets</h5>
+                            <p class="book-author">by Christina Soontornvat</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-2 text-muted">(4/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fantasy</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books is not what I expected.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>    
+
+
+
+            <!-- Book Card 17 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/City of Wishes.jpg" class="card-img-top book-cover" alt="City of Wishes">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">City of Wishes</h5>
+                            <p class="book-author">by Christina Soontornvat</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fa-solid fa-star-half"></i>
+                                <span class="ms-2 text-muted">(3.5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fantasy</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                This books is not what I expected.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Book Card 18 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Beezus and Ramona.jpg" class="card-img-top book-cover" alt="Beezus and Ramona">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Beezus and Ramona</h5>
+                            <p class="book-author">by Beverly Cleary</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-2 text-muted">(4/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fiction</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                A great book about siblings.
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+            
+
+            <!-- Book Card 19 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Shine.jpg" class="card-img-top book-cover" alt="Shine">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Shine!</h5>
+                            <p class="book-author">by J.J and Chris Grabenstein</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fa-solid fa-star-half"></i>
+                                <span class="ms-2 text-muted">(3.5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fiction</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                Relatable
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+             <!-- Book Card 20 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Turn the Tide.jpg" class="card-img-top book-cover" alt="Turn the Tide">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">Turn the Tide</h5>
+                            <p class="book-author">Elaine Dimopoulos</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fa-solid fa-star-half"></i>
+                                <span class="ms-2 text-muted">(4.5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Fiction</span>
+            
+                            </div>
+                            <p class="review-text flex-grow-1">
+                                Relatable
+                            </p>
+                            
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Book Card 21 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card book-card h-100">
+                        <img src="./Images/Dawn on the Coast.jpg" class="card-img-top book-cover" alt="The Baby-Sitters Club: Dawn on the Coast">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="book-title">The Baby-Sitters Club: Dawn on the Coast</h5>
+                            <p class="book-author">by Ann M. Martin (graphic novel adaptation by Arley Nopra)</p>
+                            <div class="rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fa-solid fa-star-half"></i>
+                                <span class="ms-2 text-muted">(4.5/5)</span>
+                            </div>
+                            <div class="genre-tags">
+                                <span class="genre-tag">Graphic Novel</span>
+                                <span class="genre-tag">Realistic Fiction</span>
+                            </div>
+                            <p class="review-text flex-grow-1">
+
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+
+
+
+
+        <!-- Load More Button
+        <div class="text-center mt-4">
+            <button class="btn load-more-btn">Show More Books</button>
+        </div>-->
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h5 class="footer-title">About This Site</h5>
+                    <p>Hi! I'm Christine and I'm 11 years old. I love reading and wanted to share my favorite books with you! <p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

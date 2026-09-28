@@ -1,0 +1,3 @@
+ErrorDocument 404 http://www.brianriffle.com
+Options -Indexes 
+DirectoryIndex index.html

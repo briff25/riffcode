@@ -1,0 +1,24 @@
+# --- Secrets: never commit these (matches in every folder) ------------------
+.env
+.env.*
+!.env.example
+contact-config.php
+
+# --- Deploy / pipeline artifacts --------------------------------------------
+backups/
+temp_book_review_images/
+
+# --- Large binaries that don't belong in git --------------------------------
+*.mp4
+
+# --- Tooling / OS junk ------------------------------------------------------
+**/.claude/settings.local.json
+.playwright-mcp/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.icloud

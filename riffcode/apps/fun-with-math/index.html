@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fun with Math</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --c-candy-pink: #ff5ca7; --c-candy-blue: #3ac7ff; --c-candy-purple: #a56dff; --c-candy-yellow: #ffd74d; --c-candy-green: #40e29d;
+      --c-ink: #14213d; --c-bg: #f7f6ff; --panel: #ffffff; --panel-b: #ebe7ff; --muted: #5f6a7a; --shadow: 0 10px 24px rgba(20,33,61,.08); --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:
+        radial-gradient(900px 500px at -10% -10%, #ffe7f5 0, transparent 60%),
+        radial-gradient(900px 600px at 110% -10%, #e6f7ff 0, transparent 60%),
+        radial-gradient(900px 500px at -10% 110%, #f0fffa 0, transparent 60%),
+        var(--c-bg);
+      color:var(--c-ink);
+      font-family: "Baloo 2", ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      letter-spacing:.2px;
+    }
+    .wrap{max-width:1100px;margin:24px auto;padding:16px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:46px;height:46px;border-radius:14px;background: conic-gradient(from 0deg, var(--c-candy-pink), var(--c-candy-purple), var(--c-candy-blue), var(--c-candy-green), var(--c-candy-yellow), var(--c-candy-pink));display:grid;place-items:center;color:#fff;font-weight:900;font-size:24px;box-shadow:var(--shadow)}
+    h1{margin:0;font-size:24px}
+    .btn{border:0;border-radius:14px;padding:10px 14px;font-weight:800;cursor:pointer;box-shadow:var(--shadow)}
+    .btn.primary{background:linear-gradient(135deg,var(--c-candy-pink),var(--c-candy-purple));color:#fff}
+    .btn.secondary{background:#fff;border:2px solid var(--panel-b)}
+    .btn.warn{background:linear-gradient(135deg,#ffd74d,#ffb84d);}
+    .btn.ghost{background:transparent;border:2px dashed #d8d5ff}
+    .grid{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+    .card{background:var(--panel);border:2px solid var(--panel-b);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .left,.right{padding:18px}
+
+    .problem{display:grid;grid-template-columns: 1fr auto;align-items:end;gap:16px}
+    .big{font-size: clamp(28px, 6vw, 56px); font-weight:900}
+    .note{color:var(--muted);font-size:14px}
+
+    .viz{background: #fff; border:2px solid var(--panel-b); border-radius: 16px; padding: 10px; min-height: 260px; display:flex;align-items:center;justify-content:center;position:relative; overflow:hidden}
+    #svgViz{width:100%;height:100%}
+
+    .controls{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    input[type="number"]{border:2px solid var(--panel-b);border-radius:12px;padding:10px 12px;font-size:20px;width:140px}
+
+    .status{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+    .tile{background:#fff;border:2px solid var(--panel-b);border-radius:12px;padding:10px;text-align:center}
+    .tile .k{font-size:12px;color:var(--muted)}
+    .tile .v{font-size:22px;font-weight:900}
+
+    .progress{margin-top:10px;height:12px;border:2px solid var(--panel-b);border-radius:999px;overflow:hidden;background:#fff}
+    .progress>div{height:100%;width:0}
+    .progress .good{background:linear-gradient(90deg,var(--c-candy-green),#63f3b3)}
+    .progress .bad{background:linear-gradient(90deg,#ff6b6b,#ffd74d)}
+
+    .panel{background:#fff;border:2px solid var(--panel-b);border-radius:14px;padding:12px;margin-bottom:12px}
+    .panel h3{margin:6px 0 10px}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin: 8px 0}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip input{display:none}
+    .chip label{display:inline-block;padding:8px 10px;border-radius:10px;border:2px solid var(--panel-b);cursor:pointer;background:#fff}
+    /* Bolder color for selected operations */
+    #ops .chip input:checked + label{background: linear-gradient(135deg, var(--c-candy-yellow), #fff3bf); border-color: var(--c-candy-pink); color:#000; font-weight:900}
+    .small{font-size:12px;color:var(--muted)}
+
+    .checklist{display:grid;grid-template-columns: repeat(6, 1fr); gap:6px;margin-top:10px}
+    @media (max-width:700px){ .checklist{ grid-template-columns: repeat(4, 1fr);} }
+    .fact{background:#fff;border:2px solid var(--panel-b);border-radius:10px;padding:6px 8px;text-align:center;font-size:12px}
+    .fact.ok{border-color:#b6ffd9;background:#f6fffb}
+    .fact.no{border-color:#ffd6e7;background:#fff7fb}
+
+    .feedback{min-height:28px;margin-top:6px;font-weight:900}
+    .feedback.good{color:#0ea96e}
+    .feedback.bad{color:#e23a5f}
+
+    .sticker-pop{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.5);font-size:64px;opacity:0;pointer-events:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.25));}
+    .sticker-pop.show{animation: pop 900ms ease forwards}
+    @keyframes pop { 0%{opacity:0;transform:translate(-50%,-50%) scale(.5) rotate(-10deg)} 40%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(6deg)} 100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0) }}
+
+    .confetti{position:absolute;top:-10px;width:10px;height:14px;border-radius:3px;opacity:.9}
+    @keyframes fall { to { transform: translateY(110vh) rotate(540deg) } }
+
+    .sticker-book{display:flex;flex-wrap:wrap;gap:8px}
+    .sticker-item{position:relative;font-size:28px;background:#fff;border:2px dashed var(--panel-b);border-radius:12px;padding:6px 10px}
+    .sticker-count{position:absolute;right:-6px;top:-6px;background:var(--c-candy-yellow);border-radius:9999px;padding:2px 6px;font-size:12px;font-weight:900}
+
+    input[type="range"]{width:140px}
+    .toggle{display:flex;align-items:center;gap:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">★</div>
+        <h1>Fun with Math</h1>
+      </div>
+      <div>
+        <button type="button" class="btn secondary" id="btnReset">Reset Progress</button>
+        <button type="button" class="btn ghost" id="btnExport">Export Results</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="left card" aria-labelledby="practice-title">
+        <h2 id="practice-title" class="sr-only" style="position:absolute;left:-10000px">Practice Area</h2>
+        <div class="problem">
+          <div>
+            <div class="big"><span id="f1">7</span> <span id="op">×</span> <span id="f2">8</span> =</div>
+            <div class="note">Type the answer and press Enter</div>
+          </div>
+          <div>
+            <input id="answer" inputmode="numeric" pattern="[0-9]*" type="number" placeholder="?" aria-label="Your answer"/>
+          </div>
+        </div>
+
+        <div class="viz" aria-labelledby="viz-title">
+          <h3 id="viz-title" class="sr-only" style="position:absolute;left:-10000px">Visual representation</h3>
+          <svg id="svgViz" role="img" aria-label="Visual model"></svg>
+          <div id="stickerPop" class="sticker-pop"></div>
+        </div>
+
+        <div class="controls">
+          <button type="button" class="btn primary" id="btnCheck">Check</button>
+          <button type="button" class="btn secondary" id="btnSkip">I’m not sure</button>
+          <button type="button" class="btn secondary" id="btnHint">Hint</button>
+          <span id="feedback" class="feedback" aria-live="polite"></span>
+        </div>
+
+        <div class="status">
+          <div class="tile"><div class="k">Solved</div><div class="v" id="statSolved">0</div></div>
+          <div class="tile"><div class="k">Correct</div><div class="v" id="statCorrect">0</div></div>
+          <div class="tile"><div class="k">Streak</div><div class="v" id="statStreak">0</div></div>
+          <div class="tile"><div class="k">Queue Left</div><div class="v" id="statLeft">0</div></div>
+        </div>
+
+        <div class="progress" title="Mastery progress">
+          <div id="barGood" class="good"></div>
+        </div>
+        <div class="progress" title="Items needing review" style="margin-top:6px;">
+          <div id="barBad" class="bad"></div>
+        </div>
+
+        <div id="factGrid"></div>
+      </section>
+
+      <aside class="right">
+        <div class="panel">
+          <h3>Choose Operations</h3>
+          <div class="chips" id="ops">
+            <div class="chip"><input id="opAdd" type="checkbox" checked><label for="opAdd">Addition (+)</label></div>
+            <div class="chip"><input id="opSub" type="checkbox" checked><label for="opSub">Subtraction (−)</label></div>
+            <div class="chip"><input id="opMul" type="checkbox" checked><label for="opMul">Multiplication (×)</label></div>
+            <div class="chip"><input id="opDiv" type="checkbox" checked><label for="opDiv">Division (÷)</label></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Number Ranges</h3>
+          <div class="row"><div class="toggle"><label for="rngAdd">Addition up to</label></div><div><input id="rngAdd" type="range" min="5" max="20" value="20"><span id="lblAdd">20</span></div></div>
+          <div class="row"><div class="toggle"><label for="rngSub">Subtraction up to</label></div><div><input id="rngSub" type="range" min="5" max="20" value="20"><span id="lblSub">20</span></div></div>
+          <div class="row"><div class="toggle"><label for="rngMul">Multiplication up to</label></div><div><input id="rngMul" type="range" min="5" max="12" value="12"><span id="lblMul">12</span></div></div>
+          <div class="row"><div class="toggle"><label for="rngDiv">Division up to</label></div><div><input id="rngDiv" type="range" min="2" max="10" value="10"><span id="lblDiv">10</span></div></div>
+        </div>
+
+        <div class="panel">
+          <h3>Options</h3>
+          <div class="row"><label class="toggle"><input type="checkbox" id="commute" checked> Use commutative pairs once (+, ×)</label></div>
+          <div class="row"><label class="toggle"><input type="checkbox" id="autoCheck" checked> Auto-check on Enter</label></div>
+          <div class="row"><label class="toggle"><input type="checkbox" id="showGrid" checked> Show visual model</label></div>
+          <div class="row"><label class="toggle"><input type="checkbox" id="snd" checked> Sound effects</label></div>
+          <div class="row" style="gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn primary" id="btnNewSet">Start / New Set</button>
+            <button type="button" class="btn warn" id="btnMastery" title="Practice items answered wrong or never tried">Mastery Mode</button>
+          </div>
+          <div class="small">Rewards: earn a sticker every 5-in-a-row streak!</div>
+        </div>
+
+        <div class="panel">
+          <h3>Sticker Book</h3>
+          <div id="stickerBook" class="sticker-book"></div>
+          <div class="small" style="margin-top:6px">Collect stickers by keeping a streak. They’re saved on this device.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+
+    function init(){
+      const $ = s=>document.querySelector(s); const $$ = s=>Array.from(document.querySelectorAll(s));
+      const key = "ttc-kids-v2";
+
+      // --- Tiny audio (user-gesture safe) ---
+      let audioCtx = null; function ping(freq=880, dur=0.12, type='sine', gain=0.03){ if(!$('#snd').checked) return; if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type = type; o.frequency.value=freq; g.gain.value=gain; o.connect(g); g.connect(audioCtx.destination); o.start(); setTimeout(()=>{o.stop();}, dur*1000); }
+      function chime(){ ping(880, .12, 'triangle', .04); setTimeout(()=>ping(1320, .14, 'triangle', .04), 140); }
+
+      // --- State ---
+      const defaultState = { facts:{}, stickers:{}, mastered:{} }; let state = Object.assign({}, defaultState, load()||{});
+      let queue = []; let current = null; let solved=0, correct=0, streak=0; let masteryMode=false;
+      const stickers = ["⭐","🍭","🍬","🦄","🚀","🌈","🎈","🥳","🎉","🐣","🍪","🧸","🦋","🐯","🪄","🧩","🎯","🍓","🪁","🐧","🪙","🛼","🌟","🍕","🦊","🐼"];
+
+      // --- Utils ---
+      function save(){ try{ localStorage.setItem(key, JSON.stringify(state)); }catch(e){} }
+      function load(){ try{ return JSON.parse(localStorage.getItem(key)); }catch(e){ return null; } }
+      function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+      function factKey(p){ return `${p.a}${p.op}${p.b}`; }
+      function ensureFact(p){ const k=factKey(p); if(!state.facts[k]) state.facts[k]={attempts:0, correct:0}; }
+
+      // --- Range labels ---
+      const ranges = [["rngAdd","lblAdd"],["rngSub","lblSub"],["rngMul","lblMul"],["rngDiv","lblDiv"]];
+      ranges.forEach(([id,lbl])=>{ const r=$(`#${id}`), l=$(`#${lbl}`); r.addEventListener('input',()=>l.textContent=r.value); l.textContent=r.value; });
+
+      // --- Events ---
+      $("#btnNewSet").onclick = startNewSet; $("#btnMastery").onclick = startMasteryMode; $("#btnCheck").onclick = ()=> checkAnswer(false); $("#btnSkip").onclick = ()=> checkAnswer(true); $("#btnHint").onclick = ()=> { if(!current) return; drawViz(current,true); $('#feedback').textContent = hintText(current); };
+      $("#answer").addEventListener('keydown', e=>{ if(e.key==='Enter' && $("#autoCheck").checked) checkAnswer(false); });
+      $("#showGrid").onchange = ()=> { if(current && $('#showGrid').checked) drawViz(current); else clearViz(); };
+      $("#btnReset").onclick = ()=>{ if(confirm('Reset all progress and stickers?')){ localStorage.removeItem(key); state=Object.assign({}, defaultState); startNewSet(); renderStickerBook(); }};
+      $("#btnExport").onclick = exportCSV;
+
+      // initial
+      renderStickerBook(); startNewSet();
+
+      // --- Problem generation ---
+      function buildSet(){
+        const useAdd = $('#opAdd').checked, useSub=$('#opSub').checked, useMul=$('#opMul').checked, useDiv=$('#opDiv').checked;
+        if(!(useAdd||useSub||useMul||useDiv)){ alert('Pick at least one operation.'); return []; }
+        const addMax=+$('#rngAdd').value, subMax=+$('#rngSub').value, mulMax=+$('#rngMul').value, divMax=+$('#rngDiv').value; const commute=$('#commute').checked; let probs=[];
+        if(useAdd){ for(let a=0;a<=addMax;a++){ for(let b=0;b<=addMax;b++){ if(commute && b<a) continue; probs.push({op:'+', a,b}); } } }
+        if(useSub){ for(let a=0;a<=subMax;a++){ for(let b=0;b<=subMax;b++){ if(a<b) continue; probs.push({op:'−', a,b}); } } }
+        if(useMul){ for(let a=1;a<=mulMax;a++){ for(let b=1;b<=mulMax;b++){ if(commute && b<a) continue; probs.push({op:'×', a,b}); } } }
+        if(useDiv){ for(let a=1;a<=divMax;a++){ for(let b=1;b<=divMax;b++){ if(a % b === 0){ const q=a/b; if(q<=divMax){ probs.push({op:'÷', a:a, b:b}); } } } } }
+        return shuffle(probs);
+      }
+
+      function startNewSet(){ queue = buildSet(); solved=0; correct=0; streak=0; masteryMode=false; nextProblem(); renderStats(); renderFactChecklist(); }
+      function startMasteryMode(){ const set = buildSet(); const toReview = set.filter(p=>{ const f=state.facts[factKey(p)]; return !f || (f.attempts>0 && f.correct < f.attempts); }); if(toReview.length===0){ alert('Nothing to review—awesome!'); return; } queue = shuffle(toReview); solved=0; correct=0; streak=0; masteryMode=true; nextProblem(); renderStats(); renderFactChecklist(); }
+
+      // --- Present & check ---
+      function nextProblem(){ if(queue.length===0){ $('#feedback').textContent = 'Set complete! Start a new set or try Mastery Mode.'; $('#feedback').className='feedback good'; $('#answer').value=''; clearViz(); renderStats(); return; } current = queue.shift(); $('#f1').textContent=current.a; $('#f2').textContent=current.b; $('#op').textContent=current.op; $('#answer').value=''; if($('#showGrid').checked) drawViz(current); $('#feedback').textContent=''; $('#feedback').className='feedback'; $('#answer').focus(); renderStats(); }
+
+      function expected(p){ switch(p.op){ case '+': return p.a + p.b; case '−': return p.a - p.b; case '×': return p.a * p.b; case '÷': return Math.trunc(p.a / p.b); } }
+      function checkAnswer(showIfWrong=false){ if(!current) return; const p=current; const user=+($('#answer').value||NaN); const exp=expected(p); ensureFact(p); const f=state.facts[factKey(p)]; f.attempts++;
+        if(user===exp){ f.correct++; correct++; solved++; streak++; $('#feedback').textContent='✅ Correct!'; $('#feedback').className='feedback good'; ping(1100,.1,'sine',.035); flashViz(); if(streak>0 && streak % 5 === 0){ awardSticker(); chime(); } save(); setTimeout(nextProblem, 380);
+        }else{ solved++; streak=0; $('#feedback').textContent = showIfWrong ? `Answer: ${exp}. We\'ll try it again later.` : '❌ Not quite. Try again!'; $('#feedback').className='feedback bad'; ping(300,.09,'sawtooth',.03); const delay = Math.min(5, Math.floor(Math.random()*3)+2); queue.splice(Math.min(delay, queue.length), 0, p); if(showIfWrong){ $('#answer').value = exp; setTimeout(nextProblem, 360); } else { $('#answer').select(); } save(); drawViz(p, true); }
+        renderStats(); renderFactChecklist(); }
+
+      // --- Visuals ---
+      function clearViz(){ const svg=$('#svgViz'); svg.innerHTML=''; }
+      function drawViz(p, pulse=false){ const svg=$('#svgViz'); svg.innerHTML=''; const pad=12; const w=svg.clientWidth||520; const h=svg.clientHeight||260; svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+        const addDot = (x,y,r,fill)=>(()=>{ const c=document.createElementNS('http://www.w3.org/2000/svg','circle'); c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',r); c.setAttribute('fill',fill); svg.appendChild(c); })();
+        const label = (txt,x,y,fill='#5f6a7a')=>{ const t=document.createElementNS('http://www.w3.org/2000/svg','text'); t.setAttribute('x',x); t.setAttribute('y',y); t.setAttribute('fill',fill); t.setAttribute('font-size','12'); t.textContent=txt; svg.appendChild(t); };
+        const rowsCols = (rows, cols)=>{ const cell=Math.min((w-2*pad)/cols,(h-2*pad)/rows); const r=Math.max(5, Math.min(16, cell*0.28)); return {cell,r}; };
+        if(p.op==='×' || p.op==='÷'){
+          const rows = (p.op==='×') ? p.a : Math.trunc(p.a / p.b); const cols = (p.op==='×') ? p.b : p.b; const {cell,r} = rowsCols(rows, cols);
+          for(let i=0;i<rows;i++) for(let j=0;j<cols;j++){ const cx = pad + cell*j + cell/2; const cy = pad + cell*i + cell/2; const color = (i%2===0) ? 'var(--c-candy-blue)' : 'var(--c-candy-pink)'; addDot(cx,cy,r,color); }
+          label(`${rows} rows × ${cols} columns`, pad, h-6);
+        } else if(p.op==='+'){
+          const a=p.a, b=p.b; const total=a+b; const cols=Math.ceil(Math.sqrt(Math.max(a,b,total))); const rows=Math.ceil(total/cols); const cell=Math.min((w-2*pad)/cols,(h-2*pad)/rows); const r=Math.max(5, Math.min(16, cell*0.28));
+          for(let n=0;n<total;n++){ const i=Math.floor(n/cols), j=n%cols; const cx=pad+cell*j+cell/2, cy=pad+cell*i+cell/2; const fill = n<a ? 'var(--c-candy-yellow)' : 'var(--c-candy-purple)'; addDot(cx,cy,r,fill); }
+          label(`${a} + ${b}`, pad, h-6);
+        } else if(p.op==='−'){
+          const a=p.a, b=p.b; const total=a; const cols=Math.ceil(Math.sqrt(total)); const rows=Math.ceil(total/cols); const cell=Math.min((w-2*pad)/cols,(h-2*pad)/rows); const r=Math.max(5, Math.min(16, cell*0.28));
+          for(let n=0;n<total;n++){ const i=Math.floor(n/cols), j=n%cols; const cx=pad+cell*j+cell/2, cy=pad+cell*i+cell/2; const fill = n < b ? 'rgba(226,58,95,.5)' : 'var(--c-candy-green)'; addDot(cx,cy,r,fill); }
+          label(`${a} − ${b}`, pad, h-6);
+        }
+        if(pulse){ svg.style.transition='transform .15s ease'; svg.style.transform='scale(1.03)'; setTimeout(()=>svg.style.transform='scale(1)', 180); }
+      }
+      function flashViz(){ const svg=$('#svgViz'); svg.style.transition='filter .15s ease'; svg.style.filter='drop-shadow(0 0 14px rgba(64,226,157,.75))'; setTimeout(()=>svg.style.filter='none',220); }
+      function hintText(p){ switch(p.op){ case '+': return `${p.a} plus ${p.b}`; case '−': return `${p.a} minus ${p.b}`; case '×': return `${p.a} rows of ${p.b}`; case '÷': return `${p.a} split into groups of ${p.b}`; } }
+
+      // --- Rewards ---
+      function awardSticker(){ const s = stickers[Math.floor(Math.random()*stickers.length)]; state.stickers[s] = (state.stickers[s]||0)+1; save(); renderStickerBook(); const pop = $('#stickerPop'); pop.textContent=s; pop.classList.remove('show'); void pop.offsetWidth; pop.classList.add('show'); confettiBurst(); setTimeout(()=>{ pop.classList.remove('show'); pop.textContent=''; }, 2400); }
+      function renderStickerBook(){ const book=$('#stickerBook'); book.innerHTML=''; const keys=Object.keys(state.stickers); if(keys.length===0){ book.innerHTML = '<div class="small">No stickers yet — earn one every 5-in-a-row!</div>'; return; } keys.sort(); for(const k of keys){ const d=document.createElement('div'); d.className='sticker-item'; d.textContent=k; const b=document.createElement('div'); b.className='sticker-count'; b.textContent=state.stickers[k]; d.appendChild(b); book.appendChild(d); } }
+      function confettiBurst(){ const box=$('.viz'); const n=26; const colors=["#ff5ca7","#3ac7ff","#a56dff","#ffd74d","#40e29d"]; const frag=document.createDocumentFragment(); for(let i=0;i<n;i++){ const c=document.createElement('div'); c.className='confetti'; c.style.left=(Math.random()*90+5)+'%'; c.style.background=colors[i%colors.length]; const dur=(Math.random()*0.8+0.9).toFixed(2)+'s'; c.style.animation=`fall ${dur} ease-in forwards`; c.style.transform=`rotate(${Math.random()*360}deg)`; frag.appendChild(c); } box.appendChild(frag); setTimeout(()=>$$('.confetti').forEach(x=>x.remove()), 2000); }
+
+      // --- Fact checklist & stats ---
+      function renderFactChecklist(){ const wrap=$('#factGrid'); wrap.innerHTML=''; const sample = queue.slice(0, Math.min(queue.length, 72)); const grid=document.createElement('div'); grid.className='checklist'; sample.forEach(p=>{ ensureFact(p); const f=state.facts[factKey(p)]; const ok=(f.correct>0 && f.correct===f.attempts); const d=document.createElement('div'); d.className='fact '+(ok?'ok':'no'); d.title=`${p.a} ${p.op} ${p.b} • ${f.correct}/${f.attempts}`; d.textContent=`${p.a}${p.op}${p.b}`; grid.appendChild(d); }); wrap.appendChild(grid); }
+      function renderStats(){ $('#statSolved').textContent=solved; $('#statCorrect').textContent=correct; $('#statStreak').textContent=streak; $('#statLeft').textContent=queue.length; const total=Math.max(1, queue.length + solved); const mastered=Object.values(state.facts).filter(f=>f.correct>0 && f.correct===f.attempts).length; const goodPct = Math.round(100*mastered/Math.max(1, mastered + (queue.length))); const badPct = 100 - goodPct; $('#barGood').style.width=goodPct+'%'; $('#barBad').style.width=badPct+'%'; }
+
+      // --- Export ---
+      function exportCSV(){ const rows=[["problem","attempts","correct"]]; for(const [k,v] of Object.entries(state.facts)) rows.push([k, v.attempts, v.correct]); const csv = rows.map(r=>r.join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='kids-coach-results.csv'; a.click(); URL.revokeObjectURL(url); }
+
+      // --- Self-tests (console only) ---
+      (function selfTest(){
+        try{
+          // set small ranges for fast checks
+          $('#rngAdd').value = 5; $('#rngSub').value = 5; $('#rngMul').value = 5; $('#rngDiv').value = 5;
+          const probs = buildSet();
+          // division: operands within slider and integer-only
+          probs.filter(p=>p.op==='÷').forEach(p=>{
+            console.assert(p.a>=1 && p.a<=+$('#rngDiv').value, 'Dividend within range');
+            console.assert(p.b>=1 && p.b<=+$('#rngDiv').value, 'Divisor within range');
+            console.assert(p.a % p.b === 0, 'Division integer-only');
+          });
+          // subtraction non-negative
+          probs.filter(p=>p.op==='−').forEach(p=>{ console.assert(p.a>=p.b, 'No negative subtraction results'); });
+          // addition, multiplication operands within range
+          probs.filter(p=>p.op==='+').forEach(p=>{ console.assert(p.a<=+$('#rngAdd').value && p.b<=+$('#rngAdd').value, 'Addition operands within range'); });
+          probs.filter(p=>p.op==='×').forEach(p=>{ console.assert(p.a<=+$('#rngMul').value && p.b<=+$('#rngMul').value, 'Multiplication operands within range'); });
+          console.log('Self-tests passed', {
+            total: probs.length,
+            add: probs.filter(p=>p.op==='+').length,
+            sub: probs.filter(p=>p.op==='−').length,
+            mul: probs.filter(p=>p.op==='×').length,
+            div: probs.filter(p=>p.op==='÷').length
+          });
+        }catch(err){ console.error('Self-test failed:', err); }
+      })();
+    }
+  })();
+  </script>
+</body>
+</html>

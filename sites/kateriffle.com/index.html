@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kate's Art Gallery</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #FFE5F1 0%, #E5F3FF 50%, #F0FFE5 100%);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #FF6B9D, #C44569, #6C5CE7);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .featured-section {
+            padding: 4rem 0;
+            background: rgb(179, 149, 179);
+            margin: 2rem 0;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #6C5CE7;
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(45deg, #FF6B9D, #C44569, #6C5CE7);
+            border-radius: 2px;
+        }
+
+        .carousel-item img {
+            height: 500px;
+            object-fit: scale-down;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .carousel-caption {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 8%;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #6C5CE7;
+            border-radius: 50%;
+            padding: 20px;
+        }
+
+        .gallery-section {
+            padding: 4rem 0;
+            background: white;
+            margin: 2rem 0;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .gallery-item {
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: scale-down;
+            border-radius: 15px;
+            border: 4px solid #FFE5F1;
+        }
+
+        .gallery-item .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .gallery-item .card-body {
+            background: linear-gradient(45deg, #FFE5F1, #E5F3FF);
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .gallery-item .card-title {
+            color: #6C5CE7;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .decorative-stars {
+            position: absolute;
+            color: #FFD700;
+            font-size: 1.5rem;
+            animation: twinkle 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .star-1 { top: 20%; left: 10%; }
+        .star-2 { top: 30%; right: 15%; }
+        .star-3 { top: 70%; left: 20%; }
+        .star-4 { top: 80%; right: 10%; }
+
+        .about-section {
+            background: linear-gradient(45deg, #FF6B9D, #C44569);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .about-section h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .about-section p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative Stars -->
+    <div class="decorative-stars star-1"><i class="fas fa-star"></i></div>
+    <div class="decorative-stars star-2"><i class="fas fa-star"></i></div>
+    <div class="decorative-stars star-3"><i class="fas fa-star"></i></div>
+    <div class="decorative-stars star-4"><i class="fas fa-star"></i></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <h1><i class="fas fa-palette"></i> Kate's Art Gallery</h1>
+            <p>Welcome to my colorful world of creativity!</p>
+        </div>
+    </div>
+
+    <!-- Featured Artwork Carousel -->
+    <div class="container">
+        <div class="featured-section">
+            <h2 class="section-title">Featured Artwork</h2>
+            <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="./Images/people.jpg" class="d-block w-100" alt="People">
+                        <!--<div class="carousel-caption">
+                            <h5>People</h5>
+                            <p>Some people!</p>
+                        </div> -->
+                    </div>
+                    <div class="carousel-item">
+                        <img src="./Images/trash.jpg" class="d-block w-100" alt="Recycle">
+
+                    </div>
+                    <div class="carousel-item">
+                        <img src="./Images/mountain.JPEG" class="d-block w-100" alt="Mountain">
+                        
+                        
+                    </div>
+                    <div class="carousel-item">
+                        <img src="./Images/giraffe.JPEG" class="d-block w-100" alt="Giraffe">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="gallery-section">
+            <h2 class="section-title">My Art Gallery</h2>
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <div class="gallery-item">
+                        <div class="card">
+                            <img src="./Images/face.JPEG" class="card-img-top" alt="Face">
+                            <div class="card-body">
+                                <h5 class="card-title">Face</h5>
+                                <p class="card-text">What big eyes you have!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="gallery-item">
+                        <div class="card">
+                            <img src="./Images/giraffe.JPEG" class="card-img-top" alt="Giraffe">
+                            <div class="card-body">
+                                <h5 class="card-title">Giraffe</h5>
+                                <p class="card-text">I like tall things!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="gallery-item">
+                        <div class="card">
+                            <img src="./Images/butterfly.JPEG" class="card-img-top" alt="Butterfly">
+                            <div class="card-body">
+                                <h5 class="card-title">Butterfly</h5>
+                                <p class="card-text">Ready to fly!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="col-md-4 col-sm-6">
+                    <div class="gallery-item">
+                        <div class="card">
+                            <img src="https://picsum.photos/300/250?random=8" class="card-img-top" alt="Castle Adventure">
+                            <div class="card-body">
+                                <h5 class="card-title">Castle Adventure</h5>
+                                <p class="card-text">A magical castle in the clouds!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="gallery-item">
+                        <div class="card">
+                            <img src="https://picsum.photos/300/250?random=9" class="card-img-top" alt="Underwater World">
+                            <div class="card-body">
+                                <h5 class="card-title">Underwater World</h5>
+                                <p class="card-text">Swimming with colorful fish!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="gallery-item">
+                        <div class="card">
+                            <img src="https://picsum.photos/300/250?random=10" class="card-img-top" alt="Pizza Party">
+                            <div class="card-body">
+                                <h5 class="card-title">Pizza Party</h5>
+                                <p class="card-text">My favorite food with friends!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- About Section -->
+        <div class="about-section">
+            <div class="container">
+                <h3><i class="fas fa-heart"></i> About the Artist</h3>
+                <p>Hi! I'm Katie, and I'm 7 years old. I love to draw and paint everything I see and imagine! My favorite things to draw are rainbows, animals, and my family. I use lots of bright colors because they make me happy!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

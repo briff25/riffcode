@@ -1,0 +1,29 @@
+h1 {
+	
+}
+
+
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-box-sizing: border-box;
+}
+
+@media only screen and (max-width: 300px) {
+	p {
+		background-color: blue
+	}
+}
+
+* {
+	padding-top: 1px;
+}
+
+hr {
+	border: none;
+	height: 1px;
+	color :orange;
+	background-color: orange;
+}
