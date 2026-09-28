@@ -48,7 +48,7 @@ window.PROJECTS = [
     title: "Christine's Book Reviews",
     tagline:
       "Snap a photo of a book cover and it publishes itself. Claude reads the cover, identifies the title, pulls clean artwork, writes the card into the page, and ships it to the server.",
-    url: "http://christineriffle.com",
+    url: "https://christineriffle.com",
     tags: ["Family", "AI Pipeline", "Books"],
     emoji: "📚",
     accent: "#ff6b6b",
@@ -61,7 +61,7 @@ window.PROJECTS = [
     title: "Kate's Art Gallery",
     tagline:
       "A nine-year-old's art, framed the way she wanted it framed: big carousel, bright gradients, and yes, Comic Sans. Art direction was not mine.",
-    url: "http://kateriffle.com",
+    url: "https://kateriffle.com",
     tags: ["Family", "Kids", "Gallery"],
     emoji: "🎨",
     accent: "#ff6b9d",

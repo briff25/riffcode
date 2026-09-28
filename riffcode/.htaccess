@@ -1,0 +1,8 @@
+# riffcode.brianriffle.com on Pair Networks (Apache).
+
+# Send every visitor to HTTPS (SSL enabled in the Pair control panel).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>

@@ -30,7 +30,9 @@ load_dotenv(ROOT / ".env")
 
 # name -> (local folder, remote folder under /usr/home/<user>/)
 SITES = {
-    "brianriffle": ("sites/brianriffle.com",     "public_html/brianriffle.com/"),
+    # Next.js static export; run `npm run build` in dev/BrianRiffle first.
+    # sites/brianriffle.com/ is the old Bootstrap site, kept for reference only.
+    "brianriffle": ("../dev/BrianRiffle/out",    "public_html/brianriffle.com/"),
     "christine":   ("sites/christineriffle.com", "public_html/christineriffle.com/"),
     "kate":        ("sites/kateriffle.com",      "public_html/kateriffle.com/"),
     "riffcode":   ("riffcode",                 "public_html/riffcode.brianriffle.com/"),
