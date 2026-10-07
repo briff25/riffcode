@@ -4,44 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Next Step Retail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
     <style>
+        /* Redline: matches brianriffle.com */
+        :root {
+            --paper: #f2f4f6;
+            --paper-2: #e7ebef;
+            --ink: #101c2e;
+            --ink-2: #1a2a42;
+            --graphite: #5a6676;
+            --mist: #a9b4c2;
+            --grid: #d3dae2;
+            --redline: #da3329;
+            --redline-deep: #b8281f;
+            --redline-bright: #ff6b5e;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        [id] { scroll-margin-top: 5rem; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+            font-size: 1.0625rem;
             line-height: 1.6;
-            color: #333;
+            color: var(--ink);
+            background: var(--paper);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        h1, h2, h3 { text-wrap: balance; }
+        p { text-wrap: pretty; }
+        ::selection { background: var(--redline); color: #fff; }
+        :focus-visible { outline: 2px solid var(--redline); outline-offset: 3px; border-radius: 2px; }
+
+        .container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #0A2140 0%, #255459 100%);
-            color: white;
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
+            position: sticky;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            background: rgb(242 244 246 / 0.9);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--grid);
         }
 
         .nav {
-            max-width: 1200px;
+            max-width: 1320px;
             margin: 0 auto;
+            padding: 0 1rem;
+            height: 4rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 2rem;
-            position: relative;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-variation-settings: "wdth" 78;
+            letter-spacing: 0.01em;
+            color: var(--ink);
+        }
+
+        .logo::before {
+            content: "NS";
+            display: grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            background: var(--ink);
+            color: var(--paper);
+            font-size: 0.95rem;
+            font-weight: 800;
+            font-variation-settings: "wdth" 62;
+            letter-spacing: 0.02em;
+        }
+
+        .logo::after {
+            content: "";
+            position: absolute;
+            left: 22px;
+            top: calc(50% - 16px);
+            border-style: solid;
+            border-width: 0 10px 10px 0;
+            border-color: transparent var(--redline) transparent transparent;
         }
 
         .nav-links {
@@ -51,287 +120,371 @@
         }
 
         .nav-links a {
-            color: white;
+            color: var(--ink);
             text-decoration: none;
-            transition: color 0.3s ease;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 150ms;
         }
 
-        .nav-links a:hover {
-            color: #80A7BF;
-        }
+        .nav-links a:hover { color: var(--redline-deep); }
 
         .mobile-menu-toggle {
             display: none;
             background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
+            border: 1.5px solid var(--ink);
+            color: var(--ink);
+            width: 40px;
+            height: 40px;
+            font-size: 1.25rem;
+            line-height: 1;
             cursor: pointer;
-            padding: 5px;
+            transition: background 150ms, color 150ms;
         }
 
-        /* Mobile Menu */
+        .mobile-menu-toggle:hover { background: var(--ink); color: var(--paper); }
+
         .mobile-menu {
             display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(135deg, #0A2140 0%, #255459 100%);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: var(--paper);
+            border-bottom: 1px solid var(--grid);
         }
 
-        .mobile-menu.active {
-            display: block;
-        }
+        .mobile-menu.active { display: block; }
 
         .mobile-menu ul {
             list-style: none;
-            padding: 0;
-            margin: 0;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
 
-        .mobile-menu li {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+        .mobile-menu li { border-top: 1px solid var(--grid); }
 
         .mobile-menu a {
             display: block;
-            padding: 1rem 2rem;
-            color: white;
+            padding: 0.9rem 0;
+            color: var(--ink);
             text-decoration: none;
-            transition: background 0.3s ease;
+            font-weight: 500;
         }
 
-        .mobile-menu a:hover {
-            background: rgba(255,255,255,0.1);
+        .mobile-menu a:hover { color: var(--redline-deep); }
+
+        /* Buttons */
+        .cta-button {
+            display: inline-block;
+            padding: 0.75rem 1.25rem;
+            background: var(--redline);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 150ms;
         }
 
-        /* Hero Section */
+        .cta-button:hover { background: var(--redline-deep); }
+
+        /* Hero */
         .hero {
-            background: linear-gradient(135deg, #80A7BF 0%, #809BA6 100%);
-            color: white;
-            padding: 120px 0 80px;
-            text-align: center;
+            padding: 5rem 1rem 5.5rem;
+            border-bottom: 1px solid var(--grid);
+            background-color: var(--paper);
+            background-image:
+                linear-gradient(rgb(211 218 226 / 0.7) 1px, transparent 1px),
+                linear-gradient(90deg, rgb(211 218 226 / 0.7) 1px, transparent 1px),
+                linear-gradient(rgb(211 218 226 / 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgb(211 218 226 / 0.3) 1px, transparent 1px);
+            background-size: 96px 96px, 96px 96px, 16px 16px, 16px 16px;
+            background-position: -1px -1px;
         }
 
         .hero-content {
-            max-width: 800px;
+            max-width: 1320px;
             margin: 0 auto;
-            padding: 0 2rem;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
+            max-width: 12ch;
+            font-size: clamp(3.6rem, 13vw, 6.75rem);
+            font-weight: 800;
+            font-variation-settings: "wdth" 62;
+            line-height: 0.9;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+            margin-bottom: 1.75rem;
         }
 
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+            max-width: 40rem;
+            font-size: 1.2rem;
+            color: var(--graphite);
+            margin-bottom: 2.25rem;
         }
 
-        .cta-button {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .cta-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Services Section */
-        .services {
-            padding: 80px 0;
-            background: #f8f9fa;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
+        /* Section titles */
         .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #0A2140;
+            font-size: clamp(2.75rem, 7vw, 5rem);
+            font-weight: 800;
+            font-variation-settings: "wdth" 62;
+            line-height: 0.92;
+            text-transform: uppercase;
+            margin-bottom: 3.5rem;
+            padding-top: 1.25rem;
+            border-top: 3px solid var(--redline);
+            display: inline-block;
+        }
+
+        /* Services */
+        .services {
+            padding: 5rem 0;
+            background: var(--paper);
+            border-bottom: 1px solid var(--grid);
         }
 
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+            gap: 2.5rem;
         }
 
         .service-card {
-            background: white;
+            background: #fff;
+            border: 1.5px solid var(--ink);
+            box-shadow: 6px 6px 0 0 var(--ink);
             padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
         .service-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #255459 0%, #4C591E 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            color: white;
-            font-size: 24px;
+            display: grid;
+            place-items: center;
+            width: 56px;
+            height: 56px;
+            border: 1.5px solid var(--ink);
+            background: var(--paper-2);
+            font-size: 1.6rem;
+            margin-bottom: 1.25rem;
         }
 
         .service-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #0A2140;
+            font-size: 1.75rem;
+            font-weight: 800;
+            font-variation-settings: "wdth" 78;
+            line-height: 1.05;
+            margin-bottom: 0.9rem;
         }
 
         .service-card p {
-            color: #666;
-            margin-bottom: 1rem;
-        }
-
-        .deliverables {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
+            color: var(--graphite);
+            margin-bottom: 1.5rem;
         }
 
         .deliverables h4 {
-            color: #0A2140;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-variation-settings: "wdth" 78;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--redline-deep);
             margin-bottom: 0.5rem;
         }
 
-        .deliverables ul {
-            list-style: none;
-            padding-left: 0;
-        }
+        .deliverables ul { list-style: none; }
 
         .deliverables li {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.3rem;
-            padding-left: 1rem;
             position: relative;
+            padding: 0.55rem 0 0.55rem 1.25rem;
+            border-top: 1px solid var(--grid);
+            font-size: 0.97rem;
         }
 
-        .deliverables li:before {
-            content: "✓";
-            color: #255459;
-            font-weight: bold;
+        .deliverables li::before {
+            content: "";
             position: absolute;
             left: 0;
+            top: 1.05rem;
+            width: 6px;
+            height: 6px;
+            background: var(--redline);
         }
 
-        /* Process Section */
+        /* Process */
         .process {
-            padding: 80px 0;
-            background: white;
+            padding: 5rem 0;
+            background: var(--paper-2);
+            border-bottom: 1px solid var(--grid);
         }
 
         .process-steps {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            border-top: 1.5px solid var(--ink);
+            border-left: 1px solid var(--grid);
         }
 
         .step {
-            text-align: center;
-            padding: 2rem;
+            padding: 1.75rem 1.5rem 2rem;
+            border-right: 1px solid var(--grid);
+            border-bottom: 1px solid var(--grid);
         }
 
         .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #80A7BF 0%, #255459 100%);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 1rem;
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            background: var(--ink);
+            color: var(--paper);
+            font-size: 1.75rem;
+            font-weight: 800;
+            font-variation-settings: "wdth" 62;
+            margin-bottom: 1.25rem;
         }
 
         .step h4 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: #0A2140;
+            font-size: 1.35rem;
+            font-weight: 800;
+            font-variation-settings: "wdth" 78;
+            line-height: 1.1;
+            margin-bottom: 0.6rem;
         }
 
-        /* CTA Section */
+        .step p {
+            color: var(--graphite);
+            font-size: 0.98rem;
+        }
+
+        /* CTA band */
         .cta-section {
-            background: linear-gradient(135deg, #0A2140 0%, #255459 100%);
-            color: white;
-            padding: 80px 0;
-            text-align: center;
+            padding: 6rem 0;
+            color: var(--paper);
+            background-color: var(--ink);
+            background-image:
+                linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+            background-size: 48px 48px;
+            background-position: -1px -1px;
         }
 
         .cta-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            max-width: 14ch;
+            font-size: clamp(3rem, 9vw, 6rem);
+            font-weight: 800;
+            font-variation-settings: "wdth" 62;
+            line-height: 0.92;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
         }
 
         .cta-section p {
-            font-size: 1.2rem;
+            max-width: 36rem;
+            font-size: 1.15rem;
+            color: var(--mist);
             margin-bottom: 2rem;
-            opacity: 0.9;
         }
 
         /* Footer */
         .footer {
-            background: #0A2140;
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
+            background: var(--ink);
+            border-top: 1px solid rgb(242 244 246 / 0.1);
+            padding: 1.75rem 0;
+            font-size: 13px;
+            color: var(--mist);
         }
 
-        /* Responsive */
+        @media (min-width: 640px) {
+            .container, .nav, .mobile-menu ul { padding: 0 2rem; }
+            .hero { padding-left: 2rem; padding-right: 2rem; }
+        }
+
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
-            }
-            
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
+            .nav-links { display: none; }
+            .mobile-menu-toggle { display: block; }
+            .hero { padding-top: 3.5rem; padding-bottom: 4rem; }
+            .services, .process { padding: 3.5rem 0; }
+            .cta-section { padding: 4rem 0; }
+            .service-card { padding: 1.5rem; }
+            .services-grid { grid-template-columns: 1fr; }
+        }
+
+
+        /* Hero floor plan (wide screens only) */
+        .hero-plan { display: none; }
+        .plan-svg { display: block; width: 100%; height: auto; }
+        .plan-svg .p-big { font-family: 'Archivo', sans-serif; font-variation-settings: "wdth" 62; }
+        .plan-svg .p-lab { font-family: 'Archivo', sans-serif; font-variation-settings: "wdth" 78; }
+        .draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw var(--dur, 0.9s) cubic-bezier(0.65, 0, 0.35, 1) var(--delay, 0s) forwards; }
+        .markup { opacity: 0; animation: markup 0.45s ease-out var(--delay, 0s) forwards; }
+        @keyframes draw { to { stroke-dashoffset: 0; } }
+        @keyframes markup { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+
+        /* About */
+        .about { padding: 5rem 0; background: var(--paper); border-bottom: 1px solid var(--grid); }
+        .about-grid { display: grid; gap: 2.5rem; }
+        .about .section-title { margin-bottom: 2rem; }
+        .about-statement {
+            font-size: clamp(1.6rem, 3vw, 2.25rem);
+            font-weight: 700;
+            font-variation-settings: "wdth" 78;
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+        }
+        .about-body { font-size: 1.125rem; line-height: 1.7; color: rgb(16 28 46 / 0.85); }
+        .about-body p { max-width: 64ch; margin-bottom: 1.25rem; }
+
+        /* Contact */
+        .contact { padding: 5rem 0; background: var(--paper-2); }
+        .contact-grid { display: grid; gap: 2rem; }
+        .contact .section-title { margin-bottom: 0; align-self: start; justify-self: start; }
+        .contact-name {
+            font-size: 1.75rem;
+            font-weight: 800;
+            font-variation-settings: "wdth" 78;
+            margin-bottom: 0.75rem;
+        }
+        .contact-details ul { list-style: none; margin-bottom: 2rem; max-width: 34rem; }
+        .contact-details li { display: flex; gap: 1rem; padding: 0.7rem 0; border-top: 1px solid var(--grid); }
+        .contact-details li:last-child { border-bottom: 1px solid var(--grid); }
+        .contact-details li span {
+            flex: 0 0 5.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-variation-settings: "wdth" 78;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--redline-deep);
+            padding-top: 0.2rem;
+        }
+        .contact-details a:not(.cta-button) {
+            color: var(--ink);
+            font-weight: 600;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 5px;
+        }
+        .contact-details a:not(.cta-button):hover { color: var(--redline-deep); }
+
+        @media (min-width: 1024px) {
+            .hero-content { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 3rem; align-items: center; }
+            .hero-plan { display: block; }
+            .hero h1 { font-size: clamp(3.6rem, 6.5vw, 5.75rem); }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .about-grid, .contact-grid { grid-template-columns: 5fr 7fr; gap: 3rem; }
+            .about-lead { position: sticky; top: 7rem; align-self: start; }
+            .about-body { padding-top: 0.75rem; }
+        }
+        @media (max-width: 768px) {
+            .about, .contact { padding: 3.5rem 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .draw { animation: none; stroke-dashoffset: 0; }
+            .markup { animation: none; opacity: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            * { transition: none !important; }
         }
     </style>
 </head>
@@ -342,8 +495,8 @@
             <ul class="nav-links">
                 <li><a href="#services">Services</a></li>
                 <li><a href="#process">Process</a></li>
-                <li><a href="https://brianriffle.com/#about">About</a></li>
-                <li><a href="https://brianriffle.com/#contact">Contact</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
             </ul>
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
         </nav>
@@ -351,17 +504,34 @@
             <ul>
                 <li><a href="#services" onclick="closeMobileMenu()">Services</a></li>
                 <li><a href="#process" onclick="closeMobileMenu()">Process</a></li>
-                <li><a href="https://brianriffle.com/#about" onclick="closeMobileMenu()">About</a></li>
-                <li><a href="https://brianriffle.com/#contact" onclick="closeMobileMenu()">Contact</a></li>
+                <li><a href="#about" onclick="closeMobileMenu()">About</a></li>
+                <li><a href="#contact" onclick="closeMobileMenu()">Contact</a></li>
             </ul>
         </div>
     </header>
 
     <section class="hero">
         <div class="hero-content">
+            <div class="hero-text">
             <h1>Turn-Key Store Launch Solutions</h1>
             <p>Guiding retailers through the entire lifecycle of a new store launch from blank floor plan to grand opening operational readiness, brand consistency, and a visually compelling, shopper-friendly environment.</p>
-            <a href="https://brianriffle.com/#contact" class="cta-button">Start Your Project</a>
+            <a href="#contact" class="cta-button">Start Your Project</a>
+            </div>
+            <div class="hero-plan">
+<svg viewBox="0 0 800 452" class="plan-svg" role="img" aria-labelledby="plan-title"><title id="plan-title">Floor plan of a typical store, marked up in red with results: 75% faster fixture procurement, 1,400 stores planned, 12% better planogram effectiveness and 27% faster space-planning cycle time.</title>
+<g stroke="#d3dae2" stroke-width="1" stroke-dasharray="6 5" fill="none"><line x1="100" y1="31" x2="100" y2="400"/><line x1="236" y1="31" x2="236" y2="400"/><line x1="380" y1="31" x2="380" y2="400"/><line x1="500" y1="31" x2="500" y2="400"/><line x1="21" y1="110" x2="560" y2="110"/><line x1="21" y1="230" x2="560" y2="230"/><line x1="21" y1="350" x2="560" y2="350"/></g>
+<g class="markup" style="--delay:1.2s" font-size="10" font-weight="600" fill="#5a6676"><circle cx="100" cy="20" r="9" fill="#f2f4f6" stroke="#5a6676"/><text x="100" y="24" text-anchor="middle">A</text><circle cx="236" cy="20" r="9" fill="#f2f4f6" stroke="#5a6676"/><text x="236" y="24" text-anchor="middle">B</text><circle cx="380" cy="20" r="9" fill="#f2f4f6" stroke="#5a6676"/><text x="380" y="24" text-anchor="middle">C</text><circle cx="500" cy="20" r="9" fill="#f2f4f6" stroke="#5a6676"/><text x="500" y="24" text-anchor="middle">D</text><circle cx="12" cy="110" r="9" fill="#f2f4f6" stroke="#5a6676"/><text x="12" y="114" text-anchor="middle">1</text><circle cx="12" cy="230" r="9" fill="#f2f4f6" stroke="#5a6676"/><text x="12" y="234" text-anchor="middle">2</text><circle cx="12" cy="350" r="9" fill="#f2f4f6" stroke="#5a6676"/><text x="12" y="354" text-anchor="middle">3</text></g>
+<g stroke="#101c2e" fill="none" stroke-linecap="square"><path d="M260,400H30V50H560V400H330" pathLength="1" class="draw" style="--delay:0.1s;--dur:1.2s;stroke-width:5"/><path d="M430,50V100M430,128V150H560" pathLength="1" class="draw" style="--delay:0.7s;--dur:0.6s;stroke-width:3"/></g>
+<g stroke="#101c2e" fill="none" stroke-width="1.4"><path d="M46,58H416V72H46Z" pathLength="1" class="draw" style="--delay:0.8s"/><path d="M83,58V72M120,58V72M157,58V72M194,58V72M231,58V72M268,58V72M305,58V72M342,58V72M379,58V72" pathLength="1" class="draw" style="--delay:1s;--dur:0.5s;stroke-width:0.8"/><path d="M38,92H52V328H38Z" pathLength="1" class="draw" style="--delay:0.85s"/><path d="M538,190H552V330H538Z" pathLength="1" class="draw" style="--delay:0.9s"/><path d="M100,118H124V276H100Z" pathLength="1" class="draw" style="--delay:0.9s"/><path d="M100,104H124V118H100ZM100,276H124V290H100Z" pathLength="1" class="draw" style="--delay:1.05s;--dur:0.5s"/><path d="M112,118V276" pathLength="1" class="draw" style="--delay:1.15s;--dur:0.5s;stroke-width:0.8"/><path d="M168,118H192V276H168Z" pathLength="1" class="draw" style="--delay:1.02s"/><path d="M168,104H192V118H168ZM168,276H192V290H168Z" pathLength="1" class="draw" style="--delay:1.17s;--dur:0.5s"/><path d="M180,118V276" pathLength="1" class="draw" style="--delay:1.27s;--dur:0.5s;stroke-width:0.8"/><path d="M236,118H260V276H236Z" pathLength="1" class="draw" style="--delay:1.14s"/><path d="M236,104H260V118H236ZM236,276H260V290H236Z" pathLength="1" class="draw" style="--delay:1.29s;--dur:0.5s"/><path d="M248,118V276" pathLength="1" class="draw" style="--delay:1.39s;--dur:0.5s;stroke-width:0.8"/><path d="M304,118H328V276H304Z" pathLength="1" class="draw" style="--delay:1.26s"/><path d="M304,104H328V118H304ZM304,276H328V290H304Z" pathLength="1" class="draw" style="--delay:1.41s;--dur:0.5s"/><path d="M316,118V276" pathLength="1" class="draw" style="--delay:1.51s;--dur:0.5s;stroke-width:0.8"/><path d="M393,214a15,15 0 1,0 30,0a15,15 0 1,0 -30,0" pathLength="1" class="draw" style="--delay:1.25s"/><path d="M463,214a15,15 0 1,0 30,0a15,15 0 1,0 -30,0" pathLength="1" class="draw" style="--delay:1.3s"/><path d="M393,252H423V282H393ZM393,252L423,282M423,252L393,282" pathLength="1" class="draw" style="--delay:1.35s"/><path d="M463,252H493V282H463ZM463,252L493,282M493,252L463,282" pathLength="1" class="draw" style="--delay:1.4s"/><path d="M100,334H136V352H100ZM104,338H113V347H104Z" pathLength="1" class="draw" style="--delay:1.3s;--dur:0.5s"/><path d="M150,334H186V352H150ZM154,338H163V347H154Z" pathLength="1" class="draw" style="--delay:1.38s;--dur:0.5s"/><path d="M200,334H236V352H200ZM204,338H213V347H204Z" pathLength="1" class="draw" style="--delay:1.46s;--dur:0.5s"/><path d="M260,400V366A34,34 0 0,1 294,400" pathLength="1" class="draw" style="--delay:1.3s;--dur:0.6s;stroke-width:1"/><path d="M330,400V366A34,34 0 0,0 296,400" pathLength="1" class="draw" style="--delay:1.3s;--dur:0.6s;stroke-width:1"/><path d="M430,128H458A28,28 0 0,0 430,100" pathLength="1" class="draw" style="--delay:1.2s;--dur:0.6s;stroke-width:1"/></g>
+<g class="markup" style="--delay:1.45s" fill="#5a6676" font-size="11"><text x="494" y="104" text-anchor="middle">Stockroom</text><text x="295" y="359" text-anchor="middle">Entry</text><text x="231" y="87" text-anchor="middle">Wall bays</text></g>
+<g class="markup" style="--delay:1.5s" stroke="#5a6676" stroke-width="0.8" fill="none"><path d="M30,406V440M560,406V440M30,432H560M24,438L36,426M554,438L566,426"/><rect x="266" y="423" width="58" height="16" fill="#f2f4f6" stroke="none"/><text x="295" y="435" text-anchor="middle" fill="#5a6676" stroke="none" font-size="11">106′-0″</text></g>
+<g stroke="#da3329" fill="none" stroke-width="2" stroke-linejoin="round"><path d="M434.0,56.0A14.52,14.52 0 0 1 458.0,56.0A14.52,14.52 0 0 1 482.0,56.0A14.52,14.52 0 0 1 506.0,56.0A14.52,14.52 0 0 1 530.0,56.0A14.52,14.52 0 0 1 554.0,56.0A14.52,14.52 0 0 1 554.0,78.0A14.52,14.52 0 0 1 554.0,100.0A14.52,14.52 0 0 1 554.0,122.0A14.52,14.52 0 0 1 554.0,144.0A14.52,14.52 0 0 1 530.0,144.0A14.52,14.52 0 0 1 506.0,144.0A14.52,14.52 0 0 1 482.0,144.0A14.52,14.52 0 0 1 458.0,144.0A14.52,14.52 0 0 1 434.0,144.0A14.52,14.52 0 0 1 434.0,122.0A14.52,14.52 0 0 1 434.0,100.0A14.52,14.52 0 0 1 434.0,78.0A14.52,14.52 0 0 1 434.0,56.0" pathLength="1" class="draw" style="--delay:1.9s;--dur:0.7s"/><path d="M558,86L598,74" pathLength="1" class="draw" style="--delay:2.25s;--dur:0.35s;stroke-width:1.4"/><circle class="markup" style="--delay:2.2s" cx="558" cy="86" r="2.6" fill="#da3329" stroke="none"/><path d="M92.0,98.0A14.52,14.52 0 0 1 113.6,98.0A14.52,14.52 0 0 1 135.3,98.0A14.52,14.52 0 0 1 156.9,98.0A14.52,14.52 0 0 1 178.5,98.0A14.52,14.52 0 0 1 200.2,98.0A14.52,14.52 0 0 1 221.8,98.0A14.52,14.52 0 0 1 243.5,98.0A14.52,14.52 0 0 1 265.1,98.0A14.52,14.52 0 0 1 286.7,98.0A14.52,14.52 0 0 1 308.4,98.0A14.52,14.52 0 0 1 330.0,98.0A14.52,14.52 0 0 1 330.0,119.8A14.52,14.52 0 0 1 330.0,141.6A14.52,14.52 0 0 1 330.0,163.3A14.52,14.52 0 0 1 330.0,185.1A14.52,14.52 0 0 1 330.0,206.9A14.52,14.52 0 0 1 330.0,228.7A14.52,14.52 0 0 1 330.0,250.4A14.52,14.52 0 0 1 330.0,272.2A14.52,14.52 0 0 1 330.0,294.0A14.52,14.52 0 0 1 308.4,294.0A14.52,14.52 0 0 1 286.7,294.0A14.52,14.52 0 0 1 265.1,294.0A14.52,14.52 0 0 1 243.5,294.0A14.52,14.52 0 0 1 221.8,294.0A14.52,14.52 0 0 1 200.2,294.0A14.52,14.52 0 0 1 178.5,294.0A14.52,14.52 0 0 1 156.9,294.0A14.52,14.52 0 0 1 135.3,294.0A14.52,14.52 0 0 1 113.6,294.0A14.52,14.52 0 0 1 92.0,294.0A14.52,14.52 0 0 1 92.0,272.2A14.52,14.52 0 0 1 92.0,250.4A14.52,14.52 0 0 1 92.0,228.7A14.52,14.52 0 0 1 92.0,206.9A14.52,14.52 0 0 1 92.0,185.1A14.52,14.52 0 0 1 92.0,163.3A14.52,14.52 0 0 1 92.0,141.6A14.52,14.52 0 0 1 92.0,119.8A14.52,14.52 0 0 1 92.0,98.0" pathLength="1" class="draw" style="--delay:2.15s;--dur:0.7s"/><path d="M334,160L598,172" pathLength="1" class="draw" style="--delay:2.5s;--dur:0.35s;stroke-width:1.4"/><circle class="markup" style="--delay:2.45s" cx="334" cy="160" r="2.6" fill="#da3329" stroke="none"/><path d="M384.0,192.0A14.52,14.52 0 0 1 408.0,192.0A14.52,14.52 0 0 1 432.0,192.0A14.52,14.52 0 0 1 456.0,192.0A14.52,14.52 0 0 1 480.0,192.0A14.52,14.52 0 0 1 504.0,192.0A14.52,14.52 0 0 1 504.0,212.0A14.52,14.52 0 0 1 504.0,232.0A14.52,14.52 0 0 1 504.0,252.0A14.52,14.52 0 0 1 504.0,272.0A14.52,14.52 0 0 1 504.0,292.0A14.52,14.52 0 0 1 480.0,292.0A14.52,14.52 0 0 1 456.0,292.0A14.52,14.52 0 0 1 432.0,292.0A14.52,14.52 0 0 1 408.0,292.0A14.52,14.52 0 0 1 384.0,292.0A14.52,14.52 0 0 1 384.0,272.0A14.52,14.52 0 0 1 384.0,252.0A14.52,14.52 0 0 1 384.0,232.0A14.52,14.52 0 0 1 384.0,212.0A14.52,14.52 0 0 1 384.0,192.0" pathLength="1" class="draw" style="--delay:2.4s;--dur:0.7s"/><path d="M508,242L598,270" pathLength="1" class="draw" style="--delay:2.75s;--dur:0.35s;stroke-width:1.4"/><circle class="markup" style="--delay:2.7s" cx="508" cy="242" r="2.6" fill="#da3329" stroke="none"/><path d="M92.0,326.0A14.52,14.52 0 0 1 113.7,326.0A14.52,14.52 0 0 1 135.4,326.0A14.52,14.52 0 0 1 157.1,326.0A14.52,14.52 0 0 1 178.9,326.0A14.52,14.52 0 0 1 200.6,326.0A14.52,14.52 0 0 1 222.3,326.0A14.52,14.52 0 0 1 244.0,326.0A14.52,14.52 0 0 1 244.0,343.0A14.52,14.52 0 0 1 244.0,360.0A14.52,14.52 0 0 1 222.3,360.0A14.52,14.52 0 0 1 200.6,360.0A14.52,14.52 0 0 1 178.9,360.0A14.52,14.52 0 0 1 157.1,360.0A14.52,14.52 0 0 1 135.4,360.0A14.52,14.52 0 0 1 113.7,360.0A14.52,14.52 0 0 1 92.0,360.0A14.52,14.52 0 0 1 92.0,343.0A14.52,14.52 0 0 1 92.0,326.0" pathLength="1" class="draw" style="--delay:2.65s;--dur:0.7s"/><path d="M248,343L598,368" pathLength="1" class="draw" style="--delay:3s;--dur:0.35s;stroke-width:1.4"/><circle class="markup" style="--delay:2.95s" cx="248" cy="343" r="2.6" fill="#da3329" stroke="none"/></g>
+<g transform="rotate(-3 598 74)"><g class="markup" style="--delay:2.45s"><path d="M614,62L624,79H604Z" fill="#f2f4f6" stroke="#da3329" stroke-width="1.6"/><text x="614" y="77" text-anchor="middle" fill="#b8281f" font-size="10" font-weight="700">1</text></g><g class="markup" style="--delay:2.5s"><text x="632" y="83" class="p-big" fill="#da3329" font-size="36" font-weight="800">−75%</text><text x="604" y="105" class="p-lab" fill="#b8281f" font-size="15" font-weight="600">fixture procurement cycle</text></g></g>
+<g transform="rotate(-3 598 172)"><g class="markup" style="--delay:2.7s"><path d="M614,160L624,177H604Z" fill="#f2f4f6" stroke="#da3329" stroke-width="1.6"/><text x="614" y="175" text-anchor="middle" fill="#b8281f" font-size="10" font-weight="700">2</text></g><g class="markup" style="--delay:2.75s"><text x="632" y="181" class="p-big" fill="#da3329" font-size="36" font-weight="800">1,400</text><text x="604" y="203" class="p-lab" fill="#b8281f" font-size="15" font-weight="600">stores planned at Big Lots</text></g></g>
+<g transform="rotate(-3 598 270)"><g class="markup" style="--delay:2.95s"><path d="M614,258L624,275H604Z" fill="#f2f4f6" stroke="#da3329" stroke-width="1.6"/><text x="614" y="273" text-anchor="middle" fill="#b8281f" font-size="10" font-weight="700">3</text></g><g class="markup" style="--delay:3s"><text x="632" y="279" class="p-big" fill="#da3329" font-size="36" font-weight="800">+12%</text><text x="604" y="301" class="p-lab" fill="#b8281f" font-size="15" font-weight="600">planogram effectiveness</text></g></g>
+<g transform="rotate(-3 598 368)"><g class="markup" style="--delay:3.2s"><path d="M614,356L624,373H604Z" fill="#f2f4f6" stroke="#da3329" stroke-width="1.6"/><text x="614" y="371" text-anchor="middle" fill="#b8281f" font-size="10" font-weight="700">4</text></g><g class="markup" style="--delay:3.25s"><text x="632" y="377" class="p-big" fill="#da3329" font-size="36" font-weight="800">−27%</text><text x="604" y="399" class="p-lab" fill="#b8281f" font-size="15" font-weight="600">space-planning cycle time</text></g></g>
+</svg>
+            </div>
         </div>
     </section>
 
@@ -460,11 +630,41 @@
         </div>
     </section>
 
+    <section class="about" id="about">
+        <div class="container about-grid">
+            <div class="about-lead">
+                <h2 class="section-title">About</h2>
+                <p class="about-statement">Merchandising, store operations, finance and technology all meet on the sales floor. That's where I work.</p>
+            </div>
+            <div class="about-body">
+                <p>For more than twenty years I've turned floor plans, planograms and sales data into decisions executives can act on. At Big Lots I directed macro space planning and analytics across 1,400 stores and led the Blue Yonder (JDA) Category Management implementation from RFP and vendor selection through organizational redesign, testing, training and rollout.</p>
+                <p>Before that I built out corporate floor planning at Dick's Sporting Goods as the chain grew from 125 to 450 stores, and ran store design and fixture procurement at PetPeople while it expanded from 42 to 74 locations.</p>
+                <p>Now I'm pointing that experience at AI. For a Fortune 500 retailer's new-store program, I build custom GPTs that turn scattered source data into submission-ready purchase orders, and they've cut procurement cycle time by 75%. I studied philosophy and mathematics before my MBA, and I still think a good space plan is a good argument: clear premises, honest numbers, and a conclusion you can defend in front of the CFO.</p>
+            </div>
+        </div>
+    </section>
+
     <section class="cta-section">
         <div class="container">
             <h2>Ready to Launch Your Next Store?</h2>
             <p>Let's discuss how we can bring your vision to life with our comprehensive store launch services.</p>
-            <a href="https://brianriffle.com/#contact" class="cta-button">Get Started Today</a>
+            <a href="#contact" class="cta-button">Get Started Today</a>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container contact-grid">
+            <h2 class="section-title">Contact</h2>
+            <div class="contact-details">
+                <p class="contact-name">Brian Riffle</p>
+                <ul>
+                    <li><span>Email</span><a href="mailto:brian.riffle@outlook.com">brian.riffle@outlook.com</a></li>
+                    <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/brianriffle" target="_blank" rel="noopener">linkedin.com/in/brianriffle</a></li>
+                    <li><span>Location</span>New Albany, Ohio</li>
+                    <li><span>Website</span><a href="https://brianriffle.com" target="_blank" rel="noopener">brianriffle.com</a></li>
+                </ul>
+                <a href="mailto:brian.riffle@outlook.com" class="cta-button">Email Brian</a>
+            </div>
         </div>
     </section>
 
