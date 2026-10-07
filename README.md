@@ -1,6 +1,6 @@
 # Riff Code
 
-**Small web projects I vibe-coded with Claude Code — every one of them is live.**
+**Small web projects I vibe-coded with Claude Code and Codex: every one of them is live.**
 
 🔗 **[riffcode.brianriffle.com](http://riffcode.brianriffle.com/)**
 
