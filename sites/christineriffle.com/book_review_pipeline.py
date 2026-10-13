@@ -26,6 +26,7 @@ import json
 import base64
 import re
 import sys
+import time
 import email
 import imaplib
 from datetime import datetime
@@ -278,45 +279,112 @@ def identify_book(image_path):
     return title, author, isbn
 
 
+def http_get(url, **kwargs):
+    """GET with retries on rate limits (429), server errors and network
+    errors. Returns a Response, or None if every attempt failed."""
+    for attempt in range(4):
+        try:
+            r = requests.get(url, timeout=15, **kwargs)
+            if r.status_code not in (429, 500, 502, 503, 504):
+                return r
+        except requests.RequestException:
+            pass
+        time.sleep(2 ** attempt)
+    return None
+
+
+def clean_author(author):
+    """Trim notes the vision model sometimes adds, e.g.
+    'A & B (graphic novel adaptation); based on the novel by C' -> 'A & B'."""
+    a = re.split(r"[;(]", author, maxsplit=1)[0]
+    a = re.split(r",?\s+based on\b", a, maxsplit=1, flags=re.I)[0]
+    return a.strip(" ,.")
+
+
+def norm(text):
+    return re.sub(r"[^a-z0-9]+", " ", (text or "").lower()).strip()
+
+
+def title_variants(title):
+    """Full title first, then looser forms (no trailing punctuation, no
+    leading 'The', and the subtitle alone) to improve catalog matches."""
+    stripped = re.sub(r"[!?.]+$", "", title).strip()
+    candidates = [title, stripped, re.sub(r"^The\s+", "", stripped, flags=re.I)]
+    if ":" in title:
+        candidates.append(re.sub(r"[!?.]+$", "", title.split(":", 1)[1]).strip())
+    variants = []
+    for v in candidates:
+        if v and v not in variants:
+            variants.append(v)
+    return variants
+
+
+def author_variants(author):
+    """Full cleaned author string, then each individual author."""
+    full = clean_author(author)
+    variants = [full] if full else []
+    for part in re.split(r"\s*(?:&|\band\b|,)\s*", full):
+        if part and part not in variants:
+            variants.append(part)
+    return variants
+
+
+def author_matches(found_authors, wanted):
+    """True if any wanted author's surname appears among the catalog's
+    authors. Guards against matching a different edition by someone else."""
+    surnames = {w.split()[-1].lower() for w in wanted if w.split()}
+    found = " ".join(found_authors or []).lower()
+    return bool(found) and any(sn in found for sn in surnames)
+
+
 def fetch_cover(title, author, isbn, fallback_image, dest_path):
     """Try Open Library (ISBN, then title/author search), then Google Books,
-    then fall back to the original photo. Returns the source label used."""
+    then fall back to the original photo. Returns the source label used.
+    Searches retry on rate limits and try looser title/author variants, but
+    only accept results whose author matches."""
 
     def save(url):
-        r = requests.get(url, timeout=15)
-        if r.ok and r.headers.get("Content-Type", "").startswith("image") and len(r.content) > 1000:
+        r = http_get(url)
+        if r is not None and r.ok and r.headers.get("Content-Type", "").startswith("image") and len(r.content) > 1000:
             dest_path.write_bytes(r.content)
             return True
         return False
 
-    if isbn:
-        if save(f"https://covers.openlibrary.org/b/isbn/{isbn}-L.jpg"):
-            return "Open Library ISBN"
+    if isbn and save(f"https://covers.openlibrary.org/b/isbn/{isbn}-L.jpg"):
+        return "Open Library ISBN"
 
-    if title and author:
-        r = requests.get(
-            "https://openlibrary.org/search.json",
-            params={"title": title, "author": author},
-            timeout=15,
-        )
-        if r.ok:
-            docs = r.json().get("docs", [])
-            for doc in docs:
-                cover_i = doc.get("cover_i")
-                if cover_i and save(f"https://covers.openlibrary.org/b/id/{cover_i}-L.jpg"):
-                    return "Open Library search"
+    titles = title_variants(title) if title else []
+    authors = author_variants(author) if author else []
+    wanted = authors[1:] or authors  # individual names for surname matching
 
-    if title and author:
-        r = requests.get(
-            "https://www.googleapis.com/books/v1/volumes",
-            params={"q": f"intitle:{title}+inauthor:{author}"},
-            timeout=15,
-        )
-        if r.ok:
-            for item in r.json().get("items", []):
-                thumb = item.get("volumeInfo", {}).get("imageLinks", {}).get("thumbnail")
-                if thumb and save(thumb):
-                    return "Google Books"
+    if titles and authors:
+        for t in titles:
+            for a in authors:
+                r = http_get("https://openlibrary.org/search.json", params={"title": t, "author": a})
+                if r is None or not r.ok:
+                    continue
+                for doc in r.json().get("docs", []):
+                    cover_i = doc.get("cover_i")
+                    if cover_i and norm(t) in norm(doc.get("title"))                             and author_matches(doc.get("author_name"), wanted)                             and save(f"https://covers.openlibrary.org/b/id/{cover_i}-L.jpg"):
+                        return "Open Library search"
+
+        google_down = False
+        for t in titles:
+            if google_down:
+                break
+            for a in authors:
+                r = http_get("https://www.googleapis.com/books/v1/volumes",
+                             params={"q": f"intitle:{t}+inauthor:{a}"})
+                if r is None:
+                    google_down = True  # still rate-limited/unreachable after retries
+                    break
+                if not r.ok:
+                    continue
+                for item in r.json().get("items", []):
+                    info = item.get("volumeInfo", {})
+                    thumb = info.get("imageLinks", {}).get("thumbnail")
+                    if thumb and norm(t) in norm(info.get("title"))                             and author_matches(info.get("authors"), wanted) and save(thumb):
+                        return "Google Books"
 
     dest_path.write_bytes(fallback_image.read_bytes())
     return "Original photo"
@@ -324,6 +392,7 @@ def fetch_cover(title, author, isbn, fallback_image, dest_path):
 
 def step2_identify(data, image_path):
     title, author, isbn = identify_book(image_path)
+    author = clean_author(author)
     data["title"] = title
     data["author"] = author
     data["isbn"] = isbn
@@ -339,6 +408,9 @@ def step2_identify(data, image_path):
 
     print(f"  Identified: {title} by {author} (ISBN: {isbn or 'none'})")
     print(f"  Cover source: {source} -> {cover_filename}")
+    if source == "Original photo":
+        print("  WARNING: no clean cover found online; using the original photo. "
+              "Replace Images/" + cover_filename + " with a cleaner image if possible.")
     return data
 
 
