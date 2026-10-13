@@ -11,7 +11,8 @@ Processes book cover photos in temp_book_review_images/ through 4 stages:
 
 Run from the site root directory:
     python book_review_pipeline.py --fetch    # Step 1 only; review the sidecars afterward
-    python book_review_pipeline.py            # Steps 2-4 on every non-uploaded sidecar
+    python book_review_pipeline.py --no-upload # Steps 2-3 only; card is added to the local index.html for review
+    python book_review_pipeline.py            # Steps 2-4 on every non-uploaded sidecar (step 4 deploys)
 
 Requires in .env:
     ANTHROPIC_API_KEY   (for Step 2 vision identification)
@@ -512,7 +513,7 @@ def step4_upload(data):
 # Driver
 # ---------------------------------------------------------------------------
 
-def process_json(json_path):
+def process_json(json_path, upload=True):
     data = json.loads(json_path.read_text(encoding="utf-8"))
     image_path = TEMP_DIR / data["image_file"]
 
@@ -527,6 +528,10 @@ def process_json(json_path):
         json_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
     if data["status"] == "published":
+        if not upload:
+            print("  Stopped before upload (--no-upload). Review the card in index.html, "
+                  "then run without --no-upload to deploy.")
+            return
         data = step4_upload(data)
         json_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
@@ -547,7 +552,7 @@ def main():
         data = json.loads(json_path.read_text(encoding="utf-8"))
         if data["status"] == "uploaded":
             continue
-        process_json(json_path)
+        process_json(json_path, upload="--no-upload" not in sys.argv[1:])
 
 
 if __name__ == "__main__":
