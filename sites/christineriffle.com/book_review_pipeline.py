@@ -377,14 +377,16 @@ def step3_publish(data):
         review=data.get("review", ""),
     )
 
-    # Insert before the closing </div> of the books row (the line right
-    # after the last book card's closing </div>, followed by </div>).
-    marker = "\n        </div>\n"
-    idx = html.rfind(marker)
-    if idx == -1:
-        raise RuntimeError("Could not find books grid closing </div> in index.html")
+    # Insert at the top of the books grid: right after the opening
+    # <div class="row"> inside <section id="books">, so newest books come first.
+    sec = html.find('<section id="books"')
+    row_tag = '<div class="row">'
+    row = html.find(row_tag, sec) if sec != -1 else -1
+    if row == -1:
+        raise RuntimeError('Could not find the books grid (<section id="books"> > <div class="row">) in index.html')
+    idx = row + len(row_tag)
 
-    html = html[:idx] + card + marker + html[idx + len(marker):]
+    html = html[:idx] + card.rstrip("\n") + "\n" + html[idx:]
     INDEX_HTML.write_text(html, encoding="utf-8")
 
     data["status"] = "published"
