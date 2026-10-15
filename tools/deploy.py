@@ -36,6 +36,8 @@ SITES = {
     "christine":   ("sites/christineriffle.com", "public_html/christineriffle.com/"),
     "kate":        ("sites/kateriffle.com",      "public_html/kateriffle.com/"),
     "riffcode":   ("riffcode",                 "public_html/riffcode.brianriffle.com/"),
+    # Single-file marketing site; also shown in the Riff Code gallery.
+    "nextstep":   ("riffcode/apps/next-step-retail", "public_html/nextstepsretail.com/"),
 }
 
 # Never uploaded. Matched against each path segment and the full relative path.
